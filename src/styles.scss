@@ -1,0 +1,33 @@
+/* You can add global styles to this file, and also import other style files */
+
+body, html {
+  height: 100%;
+}
+
+body{
+  background-color: black;
+  color:white;
+}
+.container-fluid{
+  padding: 0;
+}
+
+/* If the screen size is 1024px wide or more, set the font-size of <div> to 80px */
+@media screen and (min-width: 1024px) {
+  .feed-text {
+    font-size: 35px;
+  }
+}
+/* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
+@media screen and (max-width: 1024px) {
+  .feed-text {
+    font-size: 25px;
+  }
+}
+
+/* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
+@media screen and (max-width: 600px) {
+  .feed-text {
+    font-size: 15px;
+  }
+}

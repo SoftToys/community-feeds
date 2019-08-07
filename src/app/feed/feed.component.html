@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-8">
+    <ngb-carousel *ngIf="feeds" #carousel interval="10000" cycle (slide)="onSlide($event)">
+      <ng-container>
+        <ng-template *ngFor=" let feed of feeds" ngbSlide>
+          <div class="picsum-img-wrapper text-center">
+            <img [src]="feed.imgSource" alt="Random first slide" class="img-fluid">
+          </div>
+          <div class="carousel-caption text-center">
+            <h1 class="main-text">{{feed.mainText}}</h1>
+          </div>
+        </ng-template>
+      </ng-container>
+    </ngb-carousel>
+  </div>
+  <div class="col-4">
+    <div *ngIf="currentFeed" class="text-black text-center">
+      <h3>{{currentFeed.subText}}</h3>
+      <div *ngIf="currentFeed.subImgSource">
+        <img class="sub-image" [src]="currentFeed.subImgSource" alt="Random first slide" class="img-fluid">
+      </div>
+    </div>
+  </div>
+
+</div>

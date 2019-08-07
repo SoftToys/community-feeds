@@ -1,0 +1,20 @@
+
+.current-time{
+  font-size: 80px;
+}
+.current-weather-text{
+  font-size: 40px;
+}
+hr {
+  border-top-color: #fff;
+}
+.date-text{
+  font-size: 40px;
+}
+
+/* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
+@media screen and (max-width: 1024px) {
+  .clock-text {
+    font-size: 40px;
+  }
+}

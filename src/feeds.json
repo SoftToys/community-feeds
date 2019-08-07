@@ -1,0 +1,23 @@
+[
+  {
+    "imgSource": "https://picsum.photos/900/500?random&t=1",
+    "mainText": "בדיקה 1 תודה וסליחה",
+    "time": "12121",
+    "subText": "בדיקה 1 תודה וסליחה",
+    "subImgSource": "https://www.webopedia.com/imagesvr_ce/7576/webo-qr.png"
+  },
+  {
+    "imgSource": "https://picsum.photos/900/500?random&t=2",
+    "mainText": "בדיקה 2 תודה וסליחה",
+    "time": "12121",
+    "subText": "בדיקה 2 תודה וסליחה",
+    "subImgSource": "https://www.webopedia.com/imagesvr_ce/7576/webo-qr.png"
+  },
+  {
+    "imgSource": "https://picsum.photos/900/500?random&t=3",
+    "mainText": "בדיקה 3 תודה וסליחה",
+    "time": "12121",
+    "subText": "בדיקה 3 תודה וסליחה",
+    "subImgSource": "https://www.webopedia.com/imagesvr_ce/7576/webo-qr.png"
+  }
+]

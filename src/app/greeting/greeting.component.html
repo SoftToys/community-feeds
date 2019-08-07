@@ -1,0 +1,31 @@
+<div class="bg-dark text-center text-white h-100">
+  <div class="greet-text h1">
+    {{greeting}}
+  </div>
+  <hr />
+  <div class="date-text">
+    <span>{{now | date:"EEEE, MMMM d"}}</span>
+  </div>
+  <div class="current-time feed-text clock-text">
+    <i class="far fa-clock"></i>
+    <span>{{now | date:"HH:mm"}}</span>
+  </div>
+  <hr />
+  <div class="current-weather-text">
+    <i class="fas fa-thermometer-half"></i>
+    <span>{{temperature}}&deg;</span>/
+    <i class="fas fa-tint"></i>
+    <span>{{humidity}} </span>
+  </div>
+  <hr />
+  <div *ngIf="swellPeriod" class="current-weather-text">
+    <div>
+      <i class="fas fa-water"></i>
+      <span>{{swellHeight}}m</span>/
+      <span>{{swellPeriod}}sec </span>
+    </div>
+    <a href="http://magicseaweed.com"><img src="https://im-1-uk.msw.ms/msw_powered_by.png"></a>
+  </div>
+
+
+</div>
