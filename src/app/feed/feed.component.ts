@@ -24,8 +24,10 @@ export class FeedComponent implements OnInit {
   private fetchFeeds() {
     const url = `https://communityfeeds.blob.core.windows.net/${this.feedFile}/feeds.json`;
     this.http.get<Feed[]>(url).subscribe(feeds => {
-      this.feeds = feeds;
+      const now = new Date();
+      this.feeds = feeds.filter((f) => (!f.validFromDate || f.validFromDate > now) && (!f.validToDate || f.validToDate > now));
       if (feeds && feeds.length) {
+
         this.currentFeed = this.feeds[0];
       }
     });

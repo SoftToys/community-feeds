@@ -4,4 +4,6 @@ export interface Feed {
   time: Date;
   subText: string;
   subImgSource: string;
+  validFromDate: Date;
+  validToDate: Date;
 }
