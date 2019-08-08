@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Articles, ArticleEntity } from './articles';
 import { Observable, Subscription } from 'rxjs';
 import { interval } from 'rxjs';
+import * as moment from 'moment';
 
 
 @Component({
@@ -34,7 +35,8 @@ export class NewsFeedComponent implements OnInit, OnDestroy {
     });
   }
   private fetchHeadlines() {
-    const url = `https://newsapi.org/v2/top-headlines?country=il&apiKey=3ef38f994f794ecfbe563db621e56863`;
+    const now = moment();
+    const url = `https://newsapi.org/v2/top-headlines?country=il&apiKey=3ef38f994f794ecfbe563db621e56863&v=${now.unix()}`;
     this.http.get<Articles>(url).subscribe(a => {
       if (a.status === 'ok' && a.articles && a.articles.length > 0) {
         this.headlines = a.articles;

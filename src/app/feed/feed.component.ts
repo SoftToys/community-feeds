@@ -4,6 +4,7 @@ import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
 import { NgbSlideEvent } from '@ng-bootstrap/ng-bootstrap/carousel/carousel';
 import { HttpClient } from '@angular/common/http';
 import { interval } from 'rxjs';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-feed',
@@ -22,10 +23,24 @@ export class FeedComponent implements OnInit {
   }
 
   private fetchFeeds() {
-    const url = `https://communityfeeds.blob.core.windows.net/${this.feedFile}/feeds.json`;
+    const now = moment();
+    const url = `https://communityfeeds.blob.core.windows.net/${this.feedFile}/feeds.json?v=${now.unix()}`;
     this.http.get<Feed[]>(url).subscribe(feeds => {
-      const now = new Date();
-      this.feeds = feeds.filter((f) => (!f.validFromDate || f.validFromDate > now) && (!f.validToDate || f.validToDate > now));
+      this.feeds = feeds.filter((feed) => {
+        const isValid =
+          (!feed.validFromDate || moment(feed.validFromDate) < now) &&
+          (!feed.validToDate || moment(feed.validToDate) > now) &&
+          (feed.isActive !== false) &&
+          (!feed.day ||
+            (
+              feed.day.includes(now.weekday()) &&
+              (feed.day[0] !== now.weekday() || !feed.fromHour || now.hour() > feed.fromHour) &&
+              (feed.day[feed.day.length - 1] !== now.weekday() || !feed.tillHour || now.hour() < feed.tillHour)
+            )
+          );
+        return isValid;
+
+      });
       if (feeds && feeds.length) {
 
         this.currentFeed = this.feeds[0];
