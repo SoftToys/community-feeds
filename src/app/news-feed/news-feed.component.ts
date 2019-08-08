@@ -46,7 +46,7 @@ export class NewsFeedComponent implements OnInit, OnDestroy {
   }
   private fetchHeadlines() {
     const now = moment();
-    const url = `https://newsapi.org/v2/top-headlines?country=il&apiKey=${this.idCard.newsApiKey}&v=${now.unix()}`;
+    const url = `https://newsapi.org/v2/top-headlines?sources=ynet&apiKey=${this.idCard.newsApiKey}&v=${now.unix()}`;
     this.http.get<Articles>(url).subscribe(a => {
       if (a.status === 'ok' && a.articles && a.articles.length > 0) {
         this.headlines = a.articles;
@@ -60,9 +60,17 @@ export class NewsFeedComponent implements OnInit, OnDestroy {
   }
   get currentHeadline(): ArticleEntity {
     if (this.headlines) {
-      return this.headlines[this.currentHeadlineIndex];
+      const current = this.headlines[this.currentHeadlineIndex];
+      if (!current.publishedAtUtc && current.publishedAt) {
+        const offset = new Date().getTimezoneOffset() / 60;
+        // let pat = moment(current.publishedAt.replace('Z', `+0${Math.abs(offset)}:00`));
+        let pat = moment(current.publishedAt.replace('Z', `+0${Math.abs(offset)}:00`));
+        pat = pat.subtract(120, 'minutes');
+        current.publishedAtUtc = moment(pat).toDate();
+      }
+      return current;
     }
-    return { title: 'loading...', publishedAt: new Date() };
+    return { title: 'loading...', publishedAt: '' };
   }
 
 }

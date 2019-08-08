@@ -1,6 +1,6 @@
 <ng-container *ngIf="headlines">
   <div class="row feed-text text-right" dir="rtl">
-    <div class="col-2 article-time">[{{currentHeadline.publishedAt | date:"HH:mm"}}]</div>
+    <div class="col-2 article-time">[{{currentHeadline.publishedAtUtc | date:"(dd/MM/yy) HH:mm"}}]</div>
     <div class="col-10 article-content">{{currentHeadline.title}}</div>
   </div>
 </ng-container>

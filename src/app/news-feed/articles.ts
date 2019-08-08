@@ -10,8 +10,9 @@ export interface ArticleEntity {
   description?: string;
   url?: string;
   urlToImage?: string;
-  publishedAt?: Date;
+  publishedAt?: string;
   content?: string;
+  publishedAtUtc?: Date;
 }
 export interface Source {
   id?: string | null;
