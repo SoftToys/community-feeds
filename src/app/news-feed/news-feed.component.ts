@@ -4,6 +4,8 @@ import { Articles, ArticleEntity } from './articles';
 import { Observable, Subscription } from 'rxjs';
 import { interval } from 'rxjs';
 import * as moment from 'moment';
+import { DataService } from '../data.service';
+import { IdCard } from '../details';
 
 
 @Component({
@@ -16,27 +18,35 @@ export class NewsFeedComponent implements OnInit, OnDestroy {
   currentHeadlineIndex = 0;
   subscribe: Subscription;
   subscribeHeadlines: Subscription;
+  newsApiKey: string;
+  idCard: IdCard;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private dataService: DataService) {
+
+  }
 
   ngOnInit() {
+    this.dataService.details.subscribe(details => {
+      this.idCard = details;
+      if (this.idCard.newsApiKey) {
+        this.fetchHeadlines();
 
-    this.fetchHeadlines();
-
-    const changeAtricle = interval(12 * 1000);
-    this.subscribe = changeAtricle.subscribe(val => {
-      if (this.headlines) {
-        this.currentHeadlineIndex = (this.currentHeadlineIndex + 1) % this.headlines.length;
+        const changeAtricle = interval(12 * 1000);
+        this.subscribe = changeAtricle.subscribe(val => {
+          if (this.headlines) {
+            this.currentHeadlineIndex = (this.currentHeadlineIndex + 1) % this.headlines.length;
+          }
+        });
+        const refreshTopHeadlines = interval(600 * 1000);
+        this.subscribeHeadlines = refreshTopHeadlines.subscribe(() => {
+          this.fetchHeadlines();
+        });
       }
-    });
-    const refreshTopHeadlines = interval(600 * 1000);
-    this.subscribeHeadlines = refreshTopHeadlines.subscribe(() => {
-      this.fetchHeadlines();
     });
   }
   private fetchHeadlines() {
     const now = moment();
-    const url = `https://newsapi.org/v2/top-headlines?country=il&apiKey=3ef38f994f794ecfbe563db621e56863&v=${now.unix()}`;
+    const url = `https://newsapi.org/v2/top-headlines?country=il&apiKey=${this.idCard.newsApiKey}&v=${now.unix()}`;
     this.http.get<Articles>(url).subscribe(a => {
       if (a.status === 'ok' && a.articles && a.articles.length > 0) {
         this.headlines = a.articles;

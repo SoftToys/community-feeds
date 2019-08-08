@@ -7,6 +7,7 @@ import { NewsFeedComponent } from './news-feed/news-feed.component';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GreetingComponent } from './greeting/greeting.component';
+import { DataService } from './data.service';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { GreetingComponent } from './greeting/greeting.component';
     NgbModule,
     HttpClientJsonpModule
   ],
-  providers: [],
+  providers: [DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

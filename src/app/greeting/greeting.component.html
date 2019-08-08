@@ -1,6 +1,6 @@
-<div class="bg-dark text-center text-white h-100">
+<div *ngIf="idCard" class="bg-dark text-center text-white h-100">
   <div class="greet-text h1">
-    {{greeting}}
+    {{idCard.greeting}}
   </div>
   <hr />
   <div class="date-text">

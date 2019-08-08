@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { interval } from 'rxjs';
 import { HttpClient, JsonpClientBackend } from '@angular/common/http';
+import { DataService } from '../data.service';
+import { IdCard } from '../details';
 
 @Component({
   selector: 'app-greeting',
@@ -10,39 +12,38 @@ import { HttpClient, JsonpClientBackend } from '@angular/common/http';
 export class GreetingComponent implements OnInit {
   now: Date;
   subscribe: any;
-  greeting: string;
-  location: string;
-  weatherAppId: string;
   temperature: number;
   humidity: number;
   subscribeUpdateWeatherInterval: any;
-  magicSeaWeedKey: string;
-  magicSeaWeedSpot: number;
   swellHeight: any;
   swellPeriod: any;
-  constructor(private http: HttpClient, private jsonpHttp: JsonpClientBackend, private ref: ChangeDetectorRef) {
-    this.greeting = 'אריק לביא 1';
-    this.location = 'Netanya,il';
+  idCard: IdCard;
+  greeting: string;
+  constructor(private http: HttpClient, private ref: ChangeDetectorRef, private dataService: DataService) {
     this.now = new Date();
-    this.weatherAppId = '5e6688a21dfb2d2d8e7b4b57b0e88534';
-    this.magicSeaWeedKey = 'af5ebfb429b64e6c70f8cd3b38a8760a';
-    this.magicSeaWeedSpot = 4558;
+    dataService.details.subscribe(details => {
 
-    const changeAtricle = interval(30 * 1000);
-    this.subscribe = changeAtricle.subscribe(val => {
-      this.now = new Date();
+      this.idCard = details;
+      if (details.weatherAppId) {
+        const changeAtricle = interval(30 * 1000);
+        this.subscribe = changeAtricle.subscribe(val => {
+          this.now = new Date();
+        });
+        const updateWeatherInterval = interval(1200 * 1000);
+        this.subscribeUpdateWeatherInterval = updateWeatherInterval.subscribe(val => {
+          this.fetchWeather();
+          this.fetchWaveHeigth();
+        });
+        this.fetchWeather();
+        this.fetchWaveHeigth();
+      }
     });
-    const updateWeatherInterval = interval(1200 * 1000);
-    this.subscribeUpdateWeatherInterval = updateWeatherInterval.subscribe(val => {
-      this.fetchWeather();
-      this.fetchWaveHeigth();
-    });
-    this.fetchWeather();
-    this.fetchWaveHeigth();
+
   }
 
   private fetchWeather() {
-    this.http.get(`https://api.openweathermap.org/data/2.5/weather?q=${this.location}&appid=${this.weatherAppId}&units=metric`)
+    // tslint:disable-next-line:max-line-length
+    this.http.get(`https://api.openweathermap.org/data/2.5/weather?q=${this.idCard.location}&appid=${this.idCard.weatherAppId}&units=metric`)
       .subscribe((d: any) => {
         this.temperature = d.main.temp.toFixed(0);
         this.humidity = d.main.humidity.toFixed(0);
@@ -52,7 +53,8 @@ export class GreetingComponent implements OnInit {
 
   private fetchWaveHeigth() {
     const callback = `waves_${new Date().getTime()}`;
-    this.jsonp(`https://magicseaweed.com/api/${this.magicSeaWeedKey}/forecast/?spot_id=${this.magicSeaWeedSpot}&callback=${callback}`,
+    // tslint:disable-next-line:max-line-length
+    this.jsonp(`https://magicseaweed.com/api/${this.idCard.magicSeaWeedKey}/forecast/?spot_id=${this.idCard.magicSeaWeedSpot}&callback=${callback}`,
       (d) => {
         this.swellHeight = d[0].swell.components.combined.height;
         this.swellPeriod = d[0].swell.components.combined.period;

@@ -5,6 +5,7 @@ import { NgbSlideEvent } from '@ng-bootstrap/ng-bootstrap/carousel/carousel';
 import { HttpClient } from '@angular/common/http';
 import { interval } from 'rxjs';
 import * as moment from 'moment';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-feed',
@@ -17,8 +18,8 @@ export class FeedComponent implements OnInit {
   feeds: Feed[];
   feedFile: string;
   currentFeed: Feed;
-  constructor(private http: HttpClient) {
-    this.feedFile = 'ariklavi1';
+  constructor(private http: HttpClient, dataService: DataService) {
+    this.feedFile = dataService.tenantId;
     this.fetchFeeds();
   }
 
