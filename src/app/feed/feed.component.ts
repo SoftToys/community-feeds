@@ -29,8 +29,8 @@ export class FeedComponent implements OnInit {
     this.http.get<Feed[]>(url).subscribe(feeds => {
       this.feeds = feeds.filter((feed) => {
         const isValid =
-          (!feed.validFromDate || moment(feed.validFromDate) < now) &&
-          (!feed.validToDate || moment(feed.validToDate) > now) &&
+          (!feed.validFromDate || moment(feed.validFromDate, 'DD/MM/YYYY') < now) &&
+          (!feed.validToDate || moment(feed.validToDate, 'DD/MM/YYYY') > now) &&
           (feed.isActive !== false) &&
           (!feed.day ||
             (
