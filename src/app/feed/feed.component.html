@@ -4,10 +4,10 @@
       <ng-container>
         <ng-template *ngFor=" let feed of feeds" ngbSlide>
           <div class="picsum-img-wrapper text-center">
-            <img [src]="feed.imgSource" alt="Random first slide" class="img-fluid">
+            <img *ngIf="feed.imgSource" [src]="feed.imgSource" alt="Random first slide" class="img-fluid">
           </div>
-          <div class="carousel-caption text-center">
-            <h1 class="main-text">{{feed.mainText}}</h1>
+          <div class="carousel-caption text-center" dir="rtl">
+            <h1 class="main-text display-3">{{feed.mainText}}</h1>
           </div>
         </ng-template>
       </ng-container>
@@ -15,7 +15,7 @@
   </div>
   <div class="col-4">
     <div *ngIf="currentFeed" class="text-black text-center">
-      <h3>{{currentFeed.subText}}</h3>
+      <h1 class="sub-text">{{currentFeed.subText}}</h1>
       <div *ngIf="currentFeed.subImgSource">
         <img class="sub-image" [src]="currentFeed.subImgSource" alt="Random first slide" class="img-fluid">
       </div>

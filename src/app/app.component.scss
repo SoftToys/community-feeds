@@ -24,7 +24,7 @@
   }
 }
 /* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1000px) {
   .clock-text {
     font-size: 40px;
   }

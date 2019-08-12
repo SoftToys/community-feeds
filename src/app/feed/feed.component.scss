@@ -6,8 +6,16 @@
   height: 200px;
 }
 .main-text{
-  text-shadow: 3px 3px #000;
+  text-shadow: -5px 5px 20px #000;
+  font-weight: bold;
 }
 .row {
   margin: 0 auto;
+}
+
+/* If the screen size is 1024px wide or more, set the font-size of <div> to 80px */
+@media screen and (width: 1024px) {
+  .sub-text{
+    font-size: 30px;
+  }
 }
