@@ -1,0 +1,38 @@
+<div class="main container">
+  <div>
+    <button class="btn btn-lg btn-outline-primary" (click)="open()">Add</button>
+  </div>
+  <div *ngIf="feeds">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">text</th>
+          <th scope="col">Img</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let feed of feeds;index as i">
+          <th scope="row">{{i+1}}</th>
+          <td>{{feed.mainText}}</td>
+          <td>{{feed.imgSource}}</td>
+          <td>
+            <button *ngIf="feed.isActive" type="button" class="btn btn-primary"
+              (click)="setActive(feed,false)">Deactivate</button>
+            <button *ngIf="!feed.isActive" type="button" class="btn btn-secondary"
+              (click)="setActive(feed,true)">Activate</button>
+            <button type="button" class="btn btn-secondary" (click)="open(feed)">Edit</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <button class="btn btn-lg btn-outline-primary" (click)="publish()">Publish</button>
+  </div>
+</div>
+
+<ng-template #content let-modal>
+
+</ng-template>
