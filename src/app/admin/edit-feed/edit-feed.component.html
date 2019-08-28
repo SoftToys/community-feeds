@@ -6,54 +6,60 @@
 </div>
 <div class="modal-body">
   <form>
-    <div class="form-group">
-      <label for="mainText">Text</label>
-      <input name="mainText" class="form-control" required type="text" [(ngModel)]="feed.mainText">
-    </div>
-    <div class="form-group">
-      <label for="mainText">Image Link</label>
-      <input name="imgSource" class="form-control" type="text" [(ngModel)]="feed.imgSource">
-    </div>
-    <div class="form-group">
-      <label for="mainText">Sub Text</label>
-      <input name="subText" class="form-control" type="text" [(ngModel)]="feed.subText">
-    </div>
-    <div class="form-group">
-      <label for="mainText">Sub Image Link</label>
-      <input name="subImgSource" class="form-control" type="text" [(ngModel)]="feed.subImgSource">
-    </div>
-    <div class="form-group">
-      <label for="mainText">On Days</label>
-      <ng-multiselect-dropdown name="days" [(ngModel)]="feed.day" [data]="days" [settings]="dropdownSettings">
-      </ng-multiselect-dropdown>
-      <!-- <ngx-bootstrap-multiselect name="selectedItems" [(ngModel)]="feed.day" [items]="days">
-      </ngx-bootstrap-multiselect> -->
-    </div>
-    <div class="form-group">
-      <label for="mainText">From Hour</label>
-      <input name="fromHour" class="form-control" type="number" [(ngModel)]="feed.fromHour">
-    </div>
-    <div class="form-group">
-      <label for="mainText">Till Hour</label>
-      <input name="tillHour" class="form-control" type="number" [(ngModel)]="feed.tillHour">
-    </div>
-    <div class="form-group">
-      <label for="fromDate">From Date</label>
-      <div class="input-group">
-        <input id="fromDate" class="form-control" placeholder="yyyy-mm-dd" name="fromd" ngbDatepicker
-          #fromd="ngbDatepicker" (dateSelect)="onFromDateSelect($event)" [(ngModel)]="feed.ngbDateFrom">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary calendar" (click)="fromd.toggle()" type="button"></button>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <label for="mainText">Text</label>
+          <input name="mainText" class="form-control" required type="text" [(ngModel)]="feed.mainText">
+        </div>
+        <div class="form-group">
+          <label for="mainText">Image Link</label>
+          <input name="imgSource" class="form-control" type="text" [(ngModel)]="feed.imgSource">
+        </div>
+        <div class="form-group">
+          <label for="mainText">Sub Text</label>
+          <input name="subText" class="form-control" type="text" [(ngModel)]="feed.subText">
+        </div>
+        <div class="form-group">
+          <label for="mainText">Sub Image Link</label>
+          <input name="subImgSource" class="form-control" type="text" [(ngModel)]="feed.subImgSource">
         </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label for="toDate">Till Date</label>
-      <div class="input-group">
-        <input id="toDate" class="form-control" [(ngModel)]="feed.ngbDateTo" placeholder="yyyy-mm-dd" name="tilld"
-          ngbDatepicker #tilld="ngbDatepicker" (dateSelect)="onTillDateSelect($event)">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary calendar" (click)="tilld.toggle()" type="button"></button>
+      <div class="col-6 border-left">
+        <div class="form-group">
+          <label for="mainText">On Days</label>
+          <ng-multiselect-dropdown name="days" [(ngModel)]="feed.day" [data]="days" [settings]="dropdownSettings">
+          </ng-multiselect-dropdown>
+          <!-- <ngx-bootstrap-multiselect name="selectedItems" [(ngModel)]="feed.day" [items]="days">
+      </ngx-bootstrap-multiselect> -->
+        </div>
+        <div class="form-group">
+          <label for="mainText">From Hour</label>
+          <input name="fromHour" class="form-control" type="number" min="0" max="23" [(ngModel)]="feed.fromHour">
+        </div>
+        <div class="form-group">
+          <label for="mainText">Till Hour</label>
+          <input name="tillHour" class="form-control" type="number" min="0" max="23" [(ngModel)]="feed.tillHour">
+        </div>
+        <div class="form-group">
+          <label for="fromDate">From Date</label>
+          <div class="input-group">
+            <input id="fromDate" class="form-control" placeholder="yyyy-mm-dd" name="fromd" ngbDatepicker
+              #fromd="ngbDatepicker" (dateSelect)="onFromDateSelect($event)" [(ngModel)]="feed.ngbDateFrom">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar" (click)="fromd.toggle()" type="button"></button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="toDate">Till Date</label>
+          <div class="input-group">
+            <input id="toDate" class="form-control" [(ngModel)]="feed.ngbDateTo" placeholder="yyyy-mm-dd" name="tilld"
+              ngbDatepicker #tilld="ngbDatepicker" (dateSelect)="onTillDateSelect($event)">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar" (click)="tilld.toggle()" type="button"></button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

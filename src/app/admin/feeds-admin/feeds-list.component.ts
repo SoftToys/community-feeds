@@ -56,7 +56,7 @@ export class FeedsListComponent implements OnInit {
    *   const modalRef = this.modalService.open(NgbdModalContent);
    */
   public open(feed?: Feed) {
-    const modalRef = this.modalService.open(EditFeedComponent);
+    const modalRef = this.modalService.open(EditFeedComponent, { size: 'lg' });
     modalRef.componentInstance.feed = feed || { isActive: true };
     modalRef.result.then((result) => {
       if (feed) { // new
@@ -76,7 +76,9 @@ export class FeedsListComponent implements OnInit {
 
         },
           (err) => {
-            this.errorMsg = err.statusText || 'unable to save resources.. try again';
+            if (err.statusText !== 'OK') {
+              this.errorMsg = err.statusText || 'unable to save resources.. try again';
+            }
           });
 
     }
