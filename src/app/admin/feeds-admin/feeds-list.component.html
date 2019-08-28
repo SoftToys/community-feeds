@@ -1,38 +1,56 @@
+<div class="header h1">
+  <i class="fas fa-tools"></i>
+  <span class="title">Community feeds admin</span>
+</div>
 <div class="main container">
-  <div>
-    <button class="btn btn-lg btn-outline-primary" (click)="open()">Add</button>
+  <div class="input-group mb-3" *ngIf="!codeOk">
+
+    <input type="text" class="form-control" placeholder="Admin code" aria-label="Admin code"
+      aria-describedby="basic-addon2" [(ngModel)]="code">
+    <div class="input-group-append">
+      <button (click)="setCode()">Access</button>
+    </div>
   </div>
-  <div *ngIf="feeds">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">text</th>
-          <th scope="col">Img</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let feed of feeds;index as i">
-          <th scope="row">{{i+1}}</th>
-          <td>{{feed.mainText}}</td>
-          <td>{{feed.imgSource}}</td>
-          <td>
-            <button *ngIf="feed.isActive" type="button" class="btn btn-primary"
-              (click)="setActive(feed,false)">Deactivate</button>
-            <button *ngIf="!feed.isActive" type="button" class="btn btn-secondary"
-              (click)="setActive(feed,true)">Activate</button>
-            <button type="button" class="btn btn-secondary" (click)="open(feed)">Edit</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="input-group mb-3" *ngIf="!feeds && codeOk">
+    <input type="text" class="form-control" placeholder="Tenant ID" aria-label="Tenant ID"
+      aria-describedby="basic-addon2" [(ngModel)]="tenantId">
+    <div class="input-group-append">
+      <button (click)="fetchFeeds()">Connect</button>
+    </div>
   </div>
-  <div>
-    <button class="btn btn-lg btn-outline-primary" (click)="publish()">Publish</button>
+  <h5 class="text-danger">{{errorMsg}}</h5>
+  <div class="main-list" *ngIf="feeds">
+    <div>
+      <button class="btn btn-lg btn-outline-primary" (click)="open()">Add</button>
+    </div>
+    <div *ngIf="feeds">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">text</th>
+            <th scope="col">Img</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let feed of feeds;index as i">
+            <th scope="row">{{i+1}}</th>
+            <td>{{feed.mainText}}</td>
+            <td>{{feed.imgSource}}</td>
+            <td>
+              <button *ngIf="feed.isActive" type="button" class="btn btn-primary"
+                (click)="setActive(feed,false)">Deactivate</button>
+              <button *ngIf="!feed.isActive" type="button" class="btn btn-secondary"
+                (click)="setActive(feed,true)">Activate</button>
+              <button type="button" class="btn btn-secondary" (click)="open(feed)">Edit</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <button class="btn btn-lg btn-outline-primary" (click)="publish()">Publish</button>
+    </div>
   </div>
 </div>
-
-<ng-template #content let-modal>
-
-</ng-template>

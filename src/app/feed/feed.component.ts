@@ -34,9 +34,9 @@ export class FeedComponent implements OnInit {
           (feed.isActive !== false) &&
           (!feed.day ||
             (
-              feed.day.includes(now.weekday()) &&
-              (feed.day[0] !== now.weekday() || !feed.fromHour || now.hour() > feed.fromHour) &&
-              (feed.day[feed.day.length - 1] !== now.weekday() || !feed.tillHour || now.hour() < feed.tillHour)
+              feed.day.map(d => d.id).includes(now.weekday()) &&
+              (feed.day[0].id !== now.weekday() || !feed.fromHour || now.hour() > feed.fromHour) &&
+              (feed.day[feed.day.length - 1].id !== now.weekday() || !feed.tillHour || now.hour() < feed.tillHour)
             )
           );
         return isValid;

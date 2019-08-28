@@ -6,6 +6,7 @@ import { FeedsListComponent } from './feeds-admin/feeds-list.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditFeedComponent } from './edit-feed/edit-feed.component';
 import { FormsModule } from '@angular/forms';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     CommonModule,
     NgbModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    NgMultiSelectDropDownModule
   ],
   entryComponents: [EditFeedComponent]
 })

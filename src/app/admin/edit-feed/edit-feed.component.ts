@@ -17,6 +17,17 @@ export class FeedNgb extends Feed {
 export class EditFeedComponent implements OnInit {
 
   @Input() public feed: FeedNgb;
+  days = [
+    { id: 0, text: 'Sun' },
+    { id: 1, text: 'Mon' },
+    { id: 2, text: 'Tue' },
+    { id: 3, text: 'Wed' },
+    { id: 4, text: 'Thu' },
+    { id: 5, text: 'Fri' },
+    { id: 6, text: 'Sat' }
+
+  ];
+  dropdownSettings: any;
   constructor(public activeModal: NgbActiveModal) { }
 
   ngOnInit() {
@@ -24,6 +35,15 @@ export class EditFeedComponent implements OnInit {
     this.feed = Object.assign(empty, this.feed);
     this.feed.ngbDateFrom = this.feed.validFromDate ? this.getDate(this.feed.validFromDate) : undefined;
     this.feed.ngbDateTo = this.feed.validToDate ? this.getDate(this.feed.validToDate) : undefined;
+    this.dropdownSettings = {
+      enableCheckAll: false,
+      data: this.days,
+      singleSelection: false,
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 6,
+      allowSearchFilter: false
+    };
   }
   getDate(d: string): NgbDateStruct {
     const tokens = d.split('/');
@@ -40,5 +60,14 @@ export class EditFeedComponent implements OnInit {
   save() {
     this.activeModal.close(this.feed);
   }
-
 }
+
+
+
+// }
+
+// onSelectAll(items: any) {
+//   console.log(items);
+// }
+
+// }

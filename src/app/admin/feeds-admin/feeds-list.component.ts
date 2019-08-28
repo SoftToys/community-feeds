@@ -16,33 +16,34 @@ export class FeedsListComponent implements OnInit {
   feeds: Feed[];
   closeResult: string;
   currentlyEditing: Feed;
+  errorMsg: any;
+  code: string;
+  codeOk: boolean;
   constructor(private http: HttpClient, private modalService: NgbModal) { }
 
   ngOnInit() {
-    this.tenantId = 'ariklavi1';
-    this.fetchFeeds();
+    // this.tenantId = 'ariklavi1';
+    // this.fetchFeeds();
+    this.code = localStorage.getItem('admin-code');
+    this.codeOk = !!this.code;
   }
-
-  private fetchFeeds() {
+  setCode() {
+    localStorage.setItem('admin-code', this.code);
+    this.codeOk = true;
+  }
+  public fetchFeeds() {
+    if (!this.tenantId) {
+      return;
+    }
+    this.errorMsg = undefined;
     const now = moment();
     const url = `https://communityfeeds.blob.core.windows.net/${this.tenantId}/feeds.json?v=${now.unix()}`;
     this.http.get<Feed[]>(url).subscribe(feeds => {
-      this.feeds = feeds.filter((feed) => {
-        const isValid =
-          (!feed.validFromDate || moment(feed.validFromDate, 'DD/MM/YYYY') < now) &&
-          (!feed.validToDate || moment(feed.validToDate, 'DD/MM/YYYY') > now) &&
-          (feed.isActive !== false) &&
-          (!feed.day ||
-            (
-              feed.day.includes(now.weekday()) &&
-              (feed.day[0] !== now.weekday() || !feed.fromHour || now.hour() > feed.fromHour) &&
-              (feed.day[feed.day.length - 1] !== now.weekday() || !feed.tillHour || now.hour() < feed.tillHour)
-            )
-          );
-        return isValid;
-
+      this.feeds = feeds;
+    },
+      (err: any) => {
+        this.errorMsg = err.statusText || 'unable to fetch resource..';
       });
-    });
   }
 
   public setActive(feed: Feed, active: boolean) {
@@ -68,7 +69,17 @@ export class FeedsListComponent implements OnInit {
     });
   }
   public publish() {
+    const publish = confirm('Are you sure you want to publish changes?');
+    if (publish) {
+      this.http.post(`https://feeds-admin.azurewebsites.net/api/HttpTrigger1?tenantId=${this.tenantId}&code=${this.code}`,
+        this.feeds).subscribe((i) => {
 
+        },
+          (err) => {
+            this.errorMsg = err.statusText || 'unable to save resources.. try again';
+          });
+
+    }
   }
   public createNew(content) {
     this.currentlyEditing = { isActive: true };

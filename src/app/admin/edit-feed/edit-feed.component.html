@@ -23,6 +23,13 @@
       <input name="subImgSource" class="form-control" type="text" [(ngModel)]="feed.subImgSource">
     </div>
     <div class="form-group">
+      <label for="mainText">On Days</label>
+      <ng-multiselect-dropdown name="days" [(ngModel)]="feed.day" [data]="days" [settings]="dropdownSettings">
+      </ng-multiselect-dropdown>
+      <!-- <ngx-bootstrap-multiselect name="selectedItems" [(ngModel)]="feed.day" [items]="days">
+      </ngx-bootstrap-multiselect> -->
+    </div>
+    <div class="form-group">
       <label for="mainText">From Hour</label>
       <input name="fromHour" class="form-control" type="number" [(ngModel)]="feed.fromHour">
     </div>

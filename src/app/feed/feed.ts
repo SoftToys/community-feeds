@@ -8,11 +8,12 @@ export class Feed {
     this.subText = '';
     this.mainText = '';
     this.subImgSource = '';
+    this.day = [];
   }
   tillHour?: number;
   fromHour?: number;
   isActive: boolean;
-  day?: number[];
+  day?: { id: number, text: string }[];
   imgSource?: string;
   mainText?: string;
   time?: Date;
