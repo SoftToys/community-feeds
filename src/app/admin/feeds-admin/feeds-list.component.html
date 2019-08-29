@@ -23,20 +23,20 @@
     <input type="text" class="form-control" placeholder="Admin code" aria-label="Admin code"
       aria-describedby="basic-addon2" [(ngModel)]="code">
     <div class="input-group-append">
-      <button (click)="setCode()">Access</button>
+      <button (click)="setCode()" [disabled]="loading">Access</button>
     </div>
   </div>
   <div class="input-group mb-3" *ngIf="!feeds && codeOk">
     <input type="text" class="form-control" placeholder="Tenant ID" aria-label="Tenant ID"
       aria-describedby="basic-addon2" [(ngModel)]="tenantId">
     <div class="input-group-append">
-      <button (click)="fetchIdCard()">Connect</button>
+      <button (click)="fetchIdCard()" [disabled]="loading">Connect</button>
     </div>
   </div>
   <h5 class="text-danger">{{errorMsg}}</h5>
   <div class="main-list" *ngIf="feeds">
     <div>
-      <button class="btn btn-lg btn-outline-primary" (click)="open()">Add</button>
+      <button class="btn btn-lg btn-outline-primary" [disabled]="loading" (click)="open()">Add</button>
     </div>
     <div *ngIf="feeds">
       <table class="table">
@@ -65,7 +65,8 @@
       </table>
     </div>
     <div>
-      <button class="btn btn-lg btn-outline-primary" (click)="publish()" [disabled]="!containsChanges">Publish</button>
+      <button class="btn btn-lg btn-outline-primary" (click)="publish()"
+        [disabled]="!containsChanges || loading">Publish</button>
     </div>
   </div>
 </div>

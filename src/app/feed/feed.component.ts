@@ -23,6 +23,10 @@ export class FeedComponent implements OnInit {
     this.fetchFeeds();
   }
 
+  public getMainImage(f: Feed): string {
+    // tslint:disable-next-line:max-line-length
+    return f.imgSource || 'https://dummyimage.com/900x700/444/444.png';
+  }
   private fetchFeeds() {
     const now = moment();
     const url = `https://communityfeeds.blob.core.windows.net/${this.feedFile}/feeds.json?v=${now.unix()}`;
@@ -32,7 +36,7 @@ export class FeedComponent implements OnInit {
           (!feed.validFromDate || moment(feed.validFromDate, 'DD/MM/YYYY') < now) &&
           (!feed.validToDate || moment(feed.validToDate, 'DD/MM/YYYY') > now) &&
           (feed.isActive !== false) &&
-          (!feed.day ||
+          ((!feed.day || feed.day.length === 0 ) ||
             (
               feed.day.map(d => d.id).includes(now.weekday()) &&
               (feed.day[0].id !== now.weekday() || !feed.fromHour || now.hour() > feed.fromHour) &&

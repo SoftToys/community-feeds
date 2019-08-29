@@ -4,10 +4,10 @@
       <ng-container>
         <ng-template *ngFor=" let feed of feeds" ngbSlide>
           <div class="picsum-img-wrapper text-center">
-            <img *ngIf="feed.imgSource" [src]="feed.imgSource" alt="Random first slide" class="img-fluid">
+            <img [src]="getMainImage(feed)" alt="Random first slide" class="img-fluid">
           </div>
-          <div class="carousel-caption text-center" dir="rtl">
-            <h1 class="main-text display-3">{{feed.mainText}}</h1>
+          <div class="carousel-caption text-center d-flex h-100" dir="rtl">
+            <h1 class="main-text display-3 row justify-content-center align-self-center">{{feed.mainText}}</h1>
           </div>
         </ng-template>
       </ng-container>

@@ -2,3 +2,51 @@
   background-color: black;
   color:white;
 }
+
+
+
+.news-feed-container{
+  position: fixed;
+  bottom: 0;
+  height: 100px;
+  color: white;
+  width: 100%;
+}
+
+.container-fluid{
+  padding-left: 0px;
+}
+.full-height{
+  height: 100%;
+  font-size: bigger;
+}
+.current-time{
+  display: inline-block;
+  width: 100px;
+  height: 100%;
+}
+@media screen and (min-width: 1024px) {
+  .clock-text {
+    font-size: 60px;
+  }
+}
+/* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
+@media screen and (max-width: 1000px) {
+  .clock-text {
+    font-size: 40px;
+  }
+  .greeting-container{
+    display: none;
+  }
+}
+
+/* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
+@media screen and (max-width: 600px) {
+  .clock-text {
+    font-size: 20px;
+  }
+}
+.row {
+  margin: 0 auto;
+}
+
