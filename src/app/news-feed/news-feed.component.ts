@@ -46,7 +46,8 @@ export class NewsFeedComponent implements OnInit, OnDestroy {
   }
   private fetchHeadlines() {
     const now = moment();
-    const url = `https://newsapi.org/v2/top-headlines?sources=ynet&apiKey=${this.idCard.newsApiKey}&v=${now.unix()}`;
+    // const url = `https://newsapi.org/v2/top-headlines?sources=ynet&apiKey=${this.idCard.newsApiKey}&v=${now.unix()}`;
+    const url = `https://communityfeeds.blob.core.windows.net/data/top_headlines.json?v=${now.unix()}`;
     this.http.get<Articles>(url).subscribe(a => {
       if (a.status === 'ok' && a.articles && a.articles.length > 0) {
         this.headlines = a.articles;
