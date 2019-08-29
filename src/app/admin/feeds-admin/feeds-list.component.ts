@@ -98,6 +98,12 @@ export class FeedsListComponent implements OnInit {
     feed.isActive = active;
     this.containsChanges = true;
   }
+  public delete(feed: Feed) {
+    const deleteFeed = confirm('Are you sure you want to delete?');
+    if (deleteFeed) {
+      this.feeds = this.feeds.filter((v) => v !== feed);
+    }
+  }
 
   /**
    * open
