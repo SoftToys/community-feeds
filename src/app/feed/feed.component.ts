@@ -18,6 +18,7 @@ export class FeedComponent implements OnInit {
   feeds: Feed[];
   feedFile: string;
   currentFeed: Feed;
+  subscribeInterval: any;
   constructor(private http: HttpClient, dataService: DataService) {
     this.feedFile = dataService.tenantId;
     this.fetchFeeds();
@@ -36,7 +37,7 @@ export class FeedComponent implements OnInit {
           (!feed.validFromDate || moment(feed.validFromDate, 'DD/MM/YYYY') < now) &&
           (!feed.validToDate || moment(feed.validToDate, 'DD/MM/YYYY') > now) &&
           (feed.isActive !== false) &&
-          ((!feed.day || feed.day.length === 0 ) ||
+          ((!feed.day || feed.day.length === 0) ||
             (
               feed.day.map(d => d.id).includes(now.weekday()) &&
               (feed.day[0].id !== now.weekday() || !feed.fromHour || now.hour() > feed.fromHour) &&
@@ -54,6 +55,10 @@ export class FeedComponent implements OnInit {
   }
 
   ngOnInit() {
+    const refreshInterval = interval(600 * 1000);
+    this.subscribeInterval = refreshInterval.subscribe(() => {
+      this.fetchFeeds();
+    });
   }
 
   public onSlide(e: NgbSlideEvent) {
