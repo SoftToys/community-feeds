@@ -31,4 +31,5 @@ import { MainComponent } from './main/main.component';
   providers: [DataService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

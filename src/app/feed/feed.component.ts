@@ -22,6 +22,7 @@ export class FeedComponent implements OnInit {
   constructor(private http: HttpClient, dataService: DataService) {
     this.feedFile = dataService.tenantId;
     this.fetchFeeds();
+    setTimeout(() => { window.location.reload(); }, 24 * 60 * 60 * 1000);
   }
 
   public getMainImage(f: Feed): string {

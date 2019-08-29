@@ -8,7 +8,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { useHash: true })], // we use hash cause we host it as static site that will result 404 otherwise
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

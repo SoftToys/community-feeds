@@ -28,6 +28,11 @@ export class FeedsListComponent implements OnInit {
   ngOnInit() {
     this.code = localStorage.getItem('admin-code');
     this.codeOk = !!this.code;
+
+    this.tenantId = localStorage.getItem('ten');
+    if (this.tenantId) {
+      this.fetchIdCard();
+    }
   }
   setCode() {
     localStorage.setItem('admin-code', this.code);
@@ -38,6 +43,7 @@ export class FeedsListComponent implements OnInit {
     if (!this.tenantId) {
       return;
     }
+    localStorage.setItem('ten', this.tenantId);
     this.loading = true;
     this.errorMsg = undefined;
     const now = moment();
