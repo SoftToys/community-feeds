@@ -1,6 +1,21 @@
-<div class="header h1">
-  <i class="fas fa-tools"></i>
-  <span class="title">Community feeds admin</span>
+<div class="loading-screen-wrapper" *ngIf="loading">
+  <div class="loading-screen-icon">
+    Loading...
+  </div>
+</div>
+
+<div class="header h1 row">
+  <div class="col-6">
+    <i class="fas fa-tools"></i>
+    <span class="title">Community feeds admin</span>
+  </div>
+  <div class="col-6 text-right">
+    <i *ngIf="codeOk" class="pl-5 fas fa-user" (click)="cleanCode()" title="logout admin"></i>
+    <span *ngIf="card" class="pl-5" (click)="cleanTenant()" title="change tenant">
+      <i class="fas fa-home"></i>
+      <span class="title">{{card.greeting}}</span>
+    </span>
+  </div>
 </div>
 <div class="main container">
   <div class="input-group mb-3" *ngIf="!codeOk">
@@ -15,7 +30,7 @@
     <input type="text" class="form-control" placeholder="Tenant ID" aria-label="Tenant ID"
       aria-describedby="basic-addon2" [(ngModel)]="tenantId">
     <div class="input-group-append">
-      <button (click)="fetchFeeds()">Connect</button>
+      <button (click)="fetchIdCard()">Connect</button>
     </div>
   </div>
   <h5 class="text-danger">{{errorMsg}}</h5>
@@ -50,7 +65,7 @@
       </table>
     </div>
     <div>
-      <button class="btn btn-lg btn-outline-primary" (click)="publish()">Publish</button>
+      <button class="btn btn-lg btn-outline-primary" (click)="publish()" [disabled]="!containsChanges">Publish</button>
     </div>
   </div>
 </div>
