@@ -26,4 +26,12 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+.action-button{
+  padding: 0px 0px 8px 8px;
+  cursor: pointer;
+  opacity: 0.5;
+  &:hover{
+    opacity: 1;
+  }
+}
 

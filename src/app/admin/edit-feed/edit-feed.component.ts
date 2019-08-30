@@ -50,9 +50,12 @@ export class EditFeedComponent implements OnInit {
     return { year: Number(tokens[2]), month: Number(tokens[1]), day: Number(tokens[0]) };
   }
   get shownTimeDescription(): string {
+
     if (this.feed.day && this.feed.day.length > 0) {
-      // tslint:disable-next-line:max-line-length
+      // tslint:disable:max-line-length
       return `Will be shown on ${this.feed.day[0].text} at ${this.feed.fromHour || '00'}:00 till ${this.feed.day[this.feed.day.length - 1].text} at ${this.feed.tillHour ? this.feed.tillHour.toString() + ':00' : 'end of day'}`;
+    } else if (this.feed.fromHour) {
+      return `Will be shown every day at ${this.feed.fromHour || '00'}:00 till ${this.feed.tillHour ? this.feed.tillHour.toString() + ':00' : 'end of day'}`;
     }
     return '';
   }

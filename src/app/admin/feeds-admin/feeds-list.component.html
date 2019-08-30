@@ -54,12 +54,18 @@
             <td>{{feed.mainText}}</td>
             <td>{{feed.imgSource}}</td>
             <td>
-              <button *ngIf="feed.isActive" type="button" class="btn btn-primary"
-                (click)="setActive(feed,false)">Deactivate</button>
-              <button *ngIf="!feed.isActive" type="button" class="btn btn-secondary"
-                (click)="setActive(feed,true)">Activate</button>
-              <button type="button" class="btn btn-secondary" (click)="open(feed)">Edit</button>
-              <button type="button" class="btn btn-secondary" (click)="delete(feed)">delete</button>
+              <!-- <button  type="button" class="btn btn-primary"
+                (click)="setActive(feed,false)">Deactivate</button> -->
+              <i *ngIf="feed.isActive" class="fas fa-pause action-button" (click)="setActive(feed,false)"
+                title="Deactivate"></i>
+              <!-- <button  type="button" class="btn btn-secondary"
+                >Activate</button> -->
+              <i *ngIf="!feed.isActive" class="fas fa-play action-button" (click)="setActive(feed,true)"
+                title="Activate"></i>
+              <i class="far fa-edit action-button" (click)="open(feed)" title="Edit"></i>
+              <i class="fas fa-trash action-button" (click)="delete(feed)" title="Permanently Delete"></i>
+              <!-- <button type="button" class="btn btn-secondary" (click)="open(feed)">Edit</button> -->
+              <!-- <button type="button" class="btn btn-secondary" (click)="delete(feed)">delete</button> -->
             </td>
           </tr>
         </tbody>
