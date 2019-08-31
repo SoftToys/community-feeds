@@ -19,7 +19,7 @@ export class FeedComponent implements OnInit {
   feedFile: string;
   currentFeed: Feed;
   subscribeInterval: any;
-  constructor(private http: HttpClient, dataService: DataService) {
+  constructor(private http: HttpClient, private dataService: DataService) {
     this.feedFile = dataService.tenantId;
     this.fetchFeeds();
     setTimeout(() => { window.location.reload(); }, 24 * 60 * 60 * 1000);
@@ -34,18 +34,7 @@ export class FeedComponent implements OnInit {
     const url = `https://communityfeeds.blob.core.windows.net/${this.feedFile}/feeds.json?v=${now.unix()}`;
     this.http.get<Feed[]>(url).subscribe(feeds => {
       this.feeds = feeds.filter((feed) => {
-        const isValid =
-          (!feed.validFromDate || moment(feed.validFromDate, 'DD/MM/YYYY') < now) &&
-          (!feed.validToDate || moment(feed.validToDate, 'DD/MM/YYYY') > now) &&
-          (feed.isActive !== false) &&
-          ((!feed.day || feed.day.length === 0) ||
-            (
-              feed.day.map(d => d.id).includes(now.weekday()) &&
-              (feed.day[0].id !== now.weekday() || !feed.fromHour || now.hour() > feed.fromHour) &&
-              (feed.day[feed.day.length - 1].id !== now.weekday() || !feed.tillHour || now.hour() < feed.tillHour)
-            )
-          );
-        return isValid;
+        return this.dataService.feedFilter(now, feed);
 
       });
       if (feeds && feeds.length) {

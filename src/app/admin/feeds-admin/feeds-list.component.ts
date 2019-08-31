@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EditFeedComponent } from '../edit-feed/edit-feed.component';
 import { IdCard } from 'src/app/details';
+import { DataService } from 'src/app/data.service';
+
 
 @Component({
   selector: 'app-feeds-list',
@@ -23,7 +25,7 @@ export class FeedsListComponent implements OnInit {
   loading = false;
   containsChanges = false;
   card: IdCard;
-  constructor(private http: HttpClient, private modalService: NgbModal) { }
+  constructor(private http: HttpClient, private modalService: NgbModal, private dataService: DataService) { }
 
   ngOnInit() {
     this.code = localStorage.getItem('admin-code');
@@ -142,6 +144,10 @@ export class FeedsListComponent implements OnInit {
           });
 
     }
+  }
+  public isShown(feed: Feed) {
+    const now = moment();
+    return this.dataService.feedFilter(now, feed);
   }
   public createNew(content) {
     this.currentlyEditing = { isActive: true };

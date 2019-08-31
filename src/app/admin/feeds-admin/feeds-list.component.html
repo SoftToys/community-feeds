@@ -4,17 +4,19 @@
   </div>
 </div>
 
-<div class="header h1 row">
-  <div class="col-6">
-    <i class="fas fa-tools"></i>
-    <span class="title">Community feeds admin</span>
-  </div>
-  <div class="col-6 text-right">
-    <i *ngIf="codeOk" class="pl-5 fas fa-user" (click)="cleanCode()" title="logout admin"></i>
-    <span *ngIf="card" class="pl-5" (click)="cleanTenant()" title="change tenant">
-      <i class="fas fa-home"></i>
-      <span class="title">{{card.greeting}}</span>
-    </span>
+<div class="header container-fluid">
+  <div class="row">
+    <div class="col-6">
+      <i class="fas fa-tools"></i>
+      <span class="h2 title-header">Feeds admin</span>
+    </div>
+    <div class="col-6 text-right">
+      <i *ngIf="codeOk" class="pl-5 fas fa-user header-action" (click)="cleanCode()" title="logout admin"></i>
+      <span *ngIf="card" class="pl-5 header-action" (click)="cleanTenant()" title="change tenant">
+        <i class="fas fa-home"></i>
+        <span class="h3 title-name">{{card.greeting}}</span>
+      </span>
+    </div>
   </div>
 </div>
 <div class="main container">
@@ -35,11 +37,37 @@
   </div>
   <h5 class="text-danger">{{errorMsg}}</h5>
   <div class="main-list" *ngIf="feeds">
-    <div>
-      <button class="btn btn-lg btn-outline-primary" [disabled]="loading" (click)="open()">Add</button>
+    <div class="header-buttons">
+      <button class="btn btn-primary btn-sm" [disabled]="loading" (click)="open()">+ Add</button>
+      <button class="btn btn-danger btn-sm" (click)="publish()"
+        [disabled]="!containsChanges || loading">Publish</button>
     </div>
     <div *ngIf="feeds">
-      <table class="table">
+      <div class="row h3 table-header-row">
+        <div class="col-1"></div>
+        <div class="col-7">text</div>
+        <div class="col-2">Image</div>
+        <div class="col-2"></div>
+      </div>
+      <div class="row item-row" *ngFor="let feed of feeds;index as i">
+        <div class="col-1">{{i+1}} <i *ngIf="isShown(feed)" class="fas fa-eye"></i></div>
+        <div class="col-7">{{feed.mainText}}
+
+        </div>
+        <div class="col-2">
+          <img *ngIf="feed.imgSource" src="{{feed.imgSource}}" alt="Solid Background" class="rounded-circle img-fluid">
+        </div>
+        <div class="col-2">
+          <i *ngIf="feed.isActive" class="fas fa-pause action-button" (click)="setActive(feed,false)"
+            title="Deactivate"></i>
+          <i *ngIf="!feed.isActive" class="fas fa-play action-button" (click)="setActive(feed,true)"
+            title="Activate"></i>
+          <i class="far fa-edit action-button" (click)="open(feed)" title="Edit"></i>
+          <i class="fas fa-trash action-button" (click)="delete(feed)" title="Permanently Delete"></i></div>
+      </div>
+
+
+      <!-- <table class="table">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -54,26 +82,17 @@
             <td>{{feed.mainText}}</td>
             <td>{{feed.imgSource}}</td>
             <td>
-              <!-- <button  type="button" class="btn btn-primary"
-                (click)="setActive(feed,false)">Deactivate</button> -->
+
               <i *ngIf="feed.isActive" class="fas fa-pause action-button" (click)="setActive(feed,false)"
                 title="Deactivate"></i>
-              <!-- <button  type="button" class="btn btn-secondary"
-                >Activate</button> -->
               <i *ngIf="!feed.isActive" class="fas fa-play action-button" (click)="setActive(feed,true)"
                 title="Activate"></i>
               <i class="far fa-edit action-button" (click)="open(feed)" title="Edit"></i>
               <i class="fas fa-trash action-button" (click)="delete(feed)" title="Permanently Delete"></i>
-              <!-- <button type="button" class="btn btn-secondary" (click)="open(feed)">Edit</button> -->
-              <!-- <button type="button" class="btn btn-secondary" (click)="delete(feed)">delete</button> -->
             </td>
           </tr>
         </tbody>
-      </table>
-    </div>
-    <div>
-      <button class="btn btn-lg btn-outline-primary" (click)="publish()"
-        [disabled]="!containsChanges || loading">Publish</button>
+      </table> -->
     </div>
   </div>
 </div>
