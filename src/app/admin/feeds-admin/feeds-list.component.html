@@ -45,13 +45,13 @@
     <div *ngIf="feeds">
       <div class="row h3 table-header-row">
         <div class="col-1"></div>
-        <div class="col-7">text</div>
+        <div class="col-6">text</div>
         <div class="col-2">Image</div>
         <div class="col-2"></div>
       </div>
       <div class="row item-row" *ngFor="let feed of feeds;index as i">
         <div class="col-1">{{i+1}} <i *ngIf="isShown(feed)" class="fas fa-eye"></i></div>
-        <div class="col-7">{{feed.mainText}}
+        <div class="col-6">{{feed.mainText}}
 
         </div>
         <div class="col-2">
