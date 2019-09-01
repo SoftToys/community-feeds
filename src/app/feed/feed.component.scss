@@ -6,11 +6,14 @@
   height: 200px;
 }
 .main-text{
-  text-shadow: -5px 5px 20px #000;
+  text-shadow: -8px 8px 20px #000,8px -8px 20px #000;
   font-weight: bold;
 }
 .row {
   margin: 0 auto;
+}
+.main-image{
+  width: 100%;
 }
 
 /* If the screen size is 1024px wide or more, set the font-size of <div> to 80px */
@@ -23,4 +26,99 @@
 .blank-img{
   height: 500px;
   width: 900px;
+}
+.slide-container{
+  position: relative;
+  text-align: center;
+}
+.bg-img{
+  // position: absolute;
+  // top: 50%;
+  // left: 50%;
+  // transform: translate(-50%, -50%);
+
+}
+.main-caption{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  // animation-name: fadeIn;
+  // animation-delay:0s;
+  // animation-duration: 1s;
+}
+.sub-image{
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  width: 15%;
+  height: 15%;
+  max-width: 150px;
+  max-height: 150px;
+}
+.over-hid{
+  overflow: hidden;
+}
+
+@media screen and (max-width: 400px){
+  .slide{
+    width: 280px;
+  }
+
+}
+
+@media screen and (min-width: 401px) and (max-width: 720px) {
+  .slide{
+    width: 350px;
+  }
+}
+
+@media screen and (min-width: 721px) and (max-width: 1023px) {
+  .slide{
+    width: 550px;
+  }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1280px) {
+  .slide{
+    width: 550px;
+    height: 800px;
+  }
+}
+
+@media screen and (min-width: 1281px) and (max-width: 1440px) {
+  .slide{
+    width: 850px;
+    height: 900px;
+  }
+}
+
+@media screen and (min-width: 1441px) and (max-width: 1920px) {
+  .slide{
+    width: 1000px;
+    height: 720px;
+  }
+}
+
+@media screen and (min-width: 1921px) {
+  .slide{
+    width: 1300px;
+    height: 950px;
+
+  }
+}
+
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }

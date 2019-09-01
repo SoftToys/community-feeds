@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Feed } from './feed';
-import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
 import { NgbSlideEvent } from '@ng-bootstrap/ng-bootstrap/carousel/carousel';
 import { HttpClient } from '@angular/common/http';
 import { interval } from 'rxjs';
@@ -13,12 +12,11 @@ import { DataService } from '../data.service';
   styleUrls: ['./feed.component.scss']
 })
 export class FeedComponent implements OnInit {
-
-  @ViewChild('carousel') carousel: NgbCarousel;
   feeds: Feed[];
   feedFile: string;
   currentFeed: Feed;
   subscribeInterval: any;
+  currentIndex = 0;
   constructor(private http: HttpClient, private dataService: DataService) {
     this.feedFile = dataService.tenantId;
     this.fetchFeeds();
@@ -38,10 +36,16 @@ export class FeedComponent implements OnInit {
 
       });
       if (feeds && feeds.length) {
-
+        this.currentIndex = 0;
         this.currentFeed = this.feeds[0];
       }
     });
+  }
+  nextSlide() {
+    if (this.feeds && this.feeds.length > 0) {
+      this.currentIndex = (this.currentIndex + 1) % this.feeds.length;
+      this.currentFeed = this.feeds[this.currentIndex];
+    }
   }
 
   ngOnInit() {
@@ -49,12 +53,9 @@ export class FeedComponent implements OnInit {
     this.subscribeInterval = refreshInterval.subscribe(() => {
       this.fetchFeeds();
     });
+    const changeSlide = interval(10 * 1000);
+    changeSlide.subscribe(() => {
+      this.nextSlide();
+    });
   }
-
-  public onSlide(e: NgbSlideEvent) {
-    const tokens = e.current.split('-');
-    const currentIndex = Number(tokens[tokens.length - 1]);
-    this.currentFeed = this.feeds[currentIndex];
-  }
-
 }
