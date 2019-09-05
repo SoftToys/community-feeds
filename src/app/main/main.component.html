@@ -1,21 +1,33 @@
-<div class="container-fluid h-100 over-hid">
-  <div class="row">
-  </div>
-  <div class="container-fluid h-100">
-    <div class="row h-100">
-      <div class="col-9 p-0 body-feed">
-        <app-feed></app-feed>
-      </div>
-      <div class="col-3 p-0 greeting-container">
-        <app-greeting></app-greeting>
-      </div>
-    </div>
-  </div>
-  <div class="news-feed-container">
-    <div class="row h-100">
-      <div class="col-12 news-feed bg-danger text-white">
-        <app-news-feed></app-news-feed>
-      </div>
+<div class="container" *ngIf="!dataService.tenantId;else mainTemplate">
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Tenant ID" aria-label="Tenant ID"
+      aria-describedby="basic-addon2" [(ngModel)]="inputTenantId">
+    <div class="input-group-append">
+      <button (click)="setTenant()">Connect</button>
     </div>
   </div>
 </div>
+
+<ng-template #mainTemplate>
+  <div class="container-fluid h-100 over-hid" *ngIf="dataService.tenantId">
+    <div class="row">
+    </div>
+    <div class="container-fluid h-100">
+      <div class="row h-100">
+        <div class="col-9 p-0 body-feed">
+          <app-feed></app-feed>
+        </div>
+        <div class="col-3 p-0 greeting-container">
+          <app-greeting></app-greeting>
+        </div>
+      </div>
+    </div>
+    <div class="news-feed-container">
+      <div class="row h-100">
+        <div class="col-12 news-feed bg-danger text-white">
+          <app-news-feed></app-news-feed>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

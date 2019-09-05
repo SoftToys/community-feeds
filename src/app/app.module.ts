@@ -11,6 +11,7 @@ import { DataService } from './data.service';
 import { AdminModule } from './admin/admin.module';
 import { AppRoutingModule } from './app-routing,module';
 import { MainComponent } from './main/main.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { MainComponent } from './main/main.component';
     MainComponent
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     HttpClientModule,
     NgbModule,

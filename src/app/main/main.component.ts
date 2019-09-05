@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-main',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-  constructor() { }
+  inputTenantId: string;
+  constructor(public dataService: DataService) {
+
+  }
 
   ngOnInit() {
   }
 
+  public setTenant() {
+    this.dataService.setTenant(this.inputTenantId);
+  }
 }
