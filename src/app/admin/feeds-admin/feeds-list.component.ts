@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Feed } from '../../feed/feed';
 import * as moment from 'moment';
 import { HttpClient } from '@angular/common/http';
@@ -25,6 +25,9 @@ export class FeedsListComponent implements OnInit {
   loading = false;
   containsChanges = false;
   card: IdCard;
+  confirmText: string;
+  dontShow: boolean;
+  @ViewChild('confirmation') public confirmation: TemplateRef<any>;
   constructor(private http: HttpClient, private modalService: NgbModal, private dataService: DataService) { }
 
   ngOnInit() {
@@ -121,9 +124,24 @@ export class FeedsListComponent implements OnInit {
         this.feeds = this.feeds.filter((v) => v !== feed);
       }
       this.feeds.push(result);
+      this.openNotification('You need to \'Publish\' your changes to take affect\nClick on Publish', 'publish');
+
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed`;
+    });
+  }
+  openNotification(text: string, id: string) {
+    if (JSON.parse(window.localStorage.getItem(id)) === true) {
+      return;
+    }
+    this.confirmText = text;
+
+    this.modalService.open(this.confirmation, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+      if (this.dontShow) {
+        window.localStorage.setItem(id, JSON.stringify(true));
+      }
+    }, () => {
     });
   }
   public publish() {

@@ -25,8 +25,15 @@ export class EditFeedComponent implements OnInit {
     { id: 4, text: 'Thu' },
     { id: 5, text: 'Fri' },
     { id: 6, text: 'Sat' }
-
   ];
+  imgTypes = [
+    { id: 'Random', val: 'https://picsum.photos/900/700?random&t=2' },
+    { id: 'Solid Black', val: 'https://dummyimage.com/900x700/000/000.png' },
+    { id: 'Solid Grey', val: 'https://dummyimage.com/900x700/444/444.png' },
+    { id: 'Solid White', val: 'https://dummyimage.com/900x700/fff/fff.png' },
+    { id: 'Custom', val: '' },
+  ];
+  imgType: string;
   dropdownSettings: any;
   constructor(public activeModal: NgbActiveModal) { }
 
@@ -35,6 +42,7 @@ export class EditFeedComponent implements OnInit {
     this.feed = Object.assign(empty, this.feed);
     this.feed.ngbDateFrom = this.feed.validFromDate ? this.getDate(this.feed.validFromDate) : undefined;
     this.feed.ngbDateTo = this.feed.validToDate ? this.getDate(this.feed.validToDate) : undefined;
+    this.imgType = this.getImageType(this.feed.imgSource);
     this.dropdownSettings = {
       enableCheckAll: false,
       data: this.days,
@@ -44,6 +52,37 @@ export class EditFeedComponent implements OnInit {
       itemsShowLimit: 6,
       allowSearchFilter: false
     };
+  }
+  getImageType(imgSource: string): string {
+    let type = 'Custom';
+    if (imgSource) {
+      const ind = this.imgTypes.findIndex((e) => e.val === imgSource);
+      if (ind >= 0) {
+        type = this.imgTypes[ind].id;
+      } else if (imgSource.includes('random')) {
+        type = 'Random';
+      }
+    }
+    return type;
+
+  }
+  selectImageType(selectedType: string) {
+    switch (selectedType) {
+      case 'Custom':
+        this.feed.imgSource = '';
+        break;
+      case 'Random':
+        this.feed.imgSource = `https://picsum.photos/900/700?random&t=${new Date().getTime() % 10}`;
+        break;
+      default:
+        const ind = this.imgTypes.findIndex((e) => e.id === selectedType);
+        if (ind >= 0) {
+          this.feed.imgSource = this.imgTypes[ind].val;
+        } else {
+          this.feed.imgSource = '';
+        }
+        break;
+    }
   }
   getDate(d: string): NgbDateStruct {
     const tokens = d.split('/');
@@ -68,6 +107,7 @@ export class EditFeedComponent implements OnInit {
     this.feed.validToDate = `${e.day}/${e.month}/${e.year}`;
   }
   save() {
+    debugger;
     this.activeModal.close(this.feed);
   }
 }

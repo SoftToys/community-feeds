@@ -65,34 +65,28 @@
           <i class="far fa-edit action-button" (click)="open(feed)" title="Edit"></i>
           <i class="fas fa-trash action-button" (click)="delete(feed)" title="Permanently Delete"></i></div>
       </div>
-
-
-      <!-- <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">text</th>
-            <th scope="col">Img</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let feed of feeds;index as i">
-            <th scope="row">{{i+1}}</th>
-            <td>{{feed.mainText}}</td>
-            <td>{{feed.imgSource}}</td>
-            <td>
-
-              <i *ngIf="feed.isActive" class="fas fa-pause action-button" (click)="setActive(feed,false)"
-                title="Deactivate"></i>
-              <i *ngIf="!feed.isActive" class="fas fa-play action-button" (click)="setActive(feed,true)"
-                title="Activate"></i>
-              <i class="far fa-edit action-button" (click)="open(feed)" title="Edit"></i>
-              <i class="fas fa-trash action-button" (click)="delete(feed)" title="Permanently Delete"></i>
-            </td>
-          </tr>
-        </tbody>
-      </table> -->
     </div>
   </div>
 </div>
+
+<ng-template #confirmation let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Tip!</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      <h5>{{confirmText}}</h5>
+    </div>
+    <div class="">
+      <input type="checkbox" name="dontShow" id="dontShow" [(ngModel)]="dontShow">
+      <label for="dontShow">dont show this again</label>
+    </div>
+  </div>
+  <div class="modal-footer">
+
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+  </div>
+</ng-template>

@@ -1,7 +1,10 @@
 <div class="container h-100 p-1 over-hid">
   <div class="h-100 over-hid" *ngIf="feeds">
     <div class="slide-container h-90" (click)="nextSlide()">
-      <img [src]="getMainImage(currentFeed)" alt="Random first slide" class="image-fluid over-hid main-image">
+      <div class="postit h-100"></div>
+
+
+      <!-- <img [src]="getMainImage(currentFeed)" alt="Random first slide" class="image-fluid over-hid main-image"> -->
       <div class="main-caption text-center d-flex h100 over-hid" dir="rtl">
         <div class="main-text justify-content-center align-self-center">
           <h1 class="main-text display-2">{{currentFeed.mainText}}</h1>

@@ -5,7 +5,7 @@
   </button>
 </div>
 <div class="modal-body">
-  <form>
+  <form #feedForm="ngForm">
     <div class="row">
       <div class="col-6">
         <div class="form-group">
@@ -14,12 +14,22 @@
             rows="2"></textarea>
         </div>
         <div class="form-group">
-          <label for="mainText">Image Link</label>
-          <input name="imgSource" class="form-control" type="text" [(ngModel)]="feed.imgSource">
+          <label for="mainText">Background</label>
+          <select [(ngModel)]="imgType" class="form-control" name="imgType" (ngModelChange)="selectImageType($event)">
+            <option *ngFor="let item of imgTypes" [value]="item.id">{{item.id}}</option>
+          </select>
+          <div class="form-group" *ngIf="imgType == 'Custom'">
+            <label for="exampleFormControlTextarea1">Custom Image link</label>
+            <input name="imgSource" placeholder="Custom Image link" class="form-control" type="text" required
+              minlength="5" [(ngModel)]="feed.imgSource">
+          </div>
+          <img *ngIf="feed.imgSource" src="{{feed.imgSource}}" alt="Solid Background"
+            class="border rounded-circle img-fluid mt-3" style="width: 20%">
         </div>
         <div class="form-group">
           <label for="mainText">Sub Text</label>
-          <input name="subText" class="form-control" type="text" [(ngModel)]="feed.subText">
+          <input name="subText" placeholder="Custom Image link" class="form-control" type="text"
+            [(ngModel)]="feed.subText">
         </div>
         <div class="form-group">
           <label for="mainText">Sub Image Link</label>
@@ -74,5 +84,5 @@
 </div>
 <div class="modal-footer">
   <small class="text-info">{{shownTimeDescription}}</small>
-  <button type="button" class="btn btn-outline-dark" (click)="save()">Save</button>
+  <button type="button" class="btn btn-outline-dark" (click)="save()" [disabled]="!feedForm.form.valid">Save</button>
 </div>
