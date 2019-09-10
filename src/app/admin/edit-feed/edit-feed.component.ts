@@ -107,7 +107,6 @@ export class EditFeedComponent implements OnInit {
     this.feed.validToDate = `${e.day}/${e.month}/${e.year}`;
   }
   save() {
-    debugger;
     this.activeModal.close(this.feed);
   }
 }
