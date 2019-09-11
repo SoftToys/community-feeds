@@ -55,7 +55,8 @@
 
         </div>
         <div class="col-2">
-          <img *ngIf="feed.imgSource" src="{{feed.imgSource}}" alt="Solid Background" class="rounded-circle img-fluid">
+          <img *ngIf="feed.imgSource" src="{{feed.imgSource}}" alt="Solid Background"
+            class="border rounded-circle img-fluid">
         </div>
         <div class="col-2">
           <i *ngIf="feed.isActive" class="fas fa-pause action-button" (click)="setActive(feed,false)"

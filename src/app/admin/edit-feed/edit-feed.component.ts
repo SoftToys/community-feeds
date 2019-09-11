@@ -44,7 +44,7 @@ export class EditFeedComponent implements OnInit {
     this.feed = Object.assign(empty, this.feed);
     this.feed.ngbDateFrom = this.feed.validFromDate ? this.getDate(this.feed.validFromDate) : undefined;
     this.feed.ngbDateTo = this.feed.validToDate ? this.getDate(this.feed.validToDate) : undefined;
-    this.imgType = this.getImageType(this.feed.imgSource);
+    this.imgType = this.getImageType(this.feed.imgSource, this.feed.customClass);
     this.dropdownSettings = {
       enableCheckAll: false,
       data: this.days,
@@ -55,10 +55,10 @@ export class EditFeedComponent implements OnInit {
       allowSearchFilter: false
     };
   }
-  getImageType(imgSource: string): string {
+  getImageType(imgSource: string, customClass?: string): string {
     let type = 'Custom';
     if (imgSource) {
-      const ind = this.imgTypes.findIndex((e) => e.val === imgSource);
+      const ind = this.imgTypes.findIndex((e) => e.val === imgSource && customClass === e.customClass);
       if (ind >= 0) {
         type = this.imgTypes[ind].id;
       } else if (imgSource.includes('random')) {
