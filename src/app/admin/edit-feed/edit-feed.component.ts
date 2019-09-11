@@ -27,10 +27,10 @@ export class EditFeedComponent implements OnInit {
     { id: 6, text: 'Sat' }
   ];
   imgTypes = [
-    { id: 'Random', val: 'https://picsum.photos/900/700?random&t=2' },
-    { id: 'Solid Black', val: 'https://dummyimage.com/900x700/000/000.png' },
-    { id: 'Solid Grey', val: 'https://dummyimage.com/900x700/444/444.png' },
-    { id: 'Solid White', val: 'https://dummyimage.com/900x700/fff/fff.png' },
+    { id: 'Random', val: 'https://picsum.photos/900/700?random&t=2', customClass: '' },
+    { id: 'Solid Black', val: 'https://dummyimage.com/900x700/000/000.png', customClass: '' },
+    { id: 'Solid Grey', val: 'https://dummyimage.com/900x700/444/444.png', customClass: '' },
+    { id: 'Solid White', val: 'https://dummyimage.com/900x700/fff/fff.png', customClass: '' },
     { id: 'Art Picture', val: 'https://dummyimage.com/900x700/fff/fff.png', customClass: 'art-picture' },
     { id: 'Post it', val: 'https://dummyimage.com/900x700/fefe7e/fefe7e.png', customClass: 'post-it' },
     { id: 'Custom', val: '' },
@@ -58,7 +58,8 @@ export class EditFeedComponent implements OnInit {
   getImageType(imgSource: string, customClass?: string): string {
     let type = 'Custom';
     if (imgSource) {
-      const ind = this.imgTypes.findIndex((e) => e.val === imgSource && customClass === e.customClass);
+      debugger;
+      const ind = this.imgTypes.findIndex((e) => e.val === imgSource && (customClass === e.customClass));
       if (ind >= 0) {
         type = this.imgTypes[ind].id;
       } else if (imgSource.includes('random')) {
