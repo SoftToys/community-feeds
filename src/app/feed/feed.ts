@@ -21,4 +21,5 @@ export class Feed {
   subImgSource?: string;
   validFromDate?: string;
   validToDate?: string;
+  customClass?: string;
 }

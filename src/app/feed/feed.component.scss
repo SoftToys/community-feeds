@@ -137,7 +137,7 @@
   font-family:'Reenie Beanie';
   font-size:22px;
   border-bottom-right-radius: 60px 5px;
-  display:inline-block;
+  // display:inline-block;
   background: linear-gradient(135deg, #ffff88 81%,#ffff88 82%,#ffff88 82%,#ffffc6 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffff88', endColorstr='#ffffc6',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
@@ -152,4 +152,12 @@
   background: rgba(0, 0, 0, 0.2);
   box-shadow:2px 15px 5px rgba(0, 0, 0, 0.40);
   transform: matrix(-1, -0.1, 0, 1, 0, 0);
+}
+
+.art-picture{
+  border: 15px rgb(190, 138, 113) solid;
+}
+.post-it{
+  transform: rotate(3deg);
+  border: 15px rgb(0, 0, 0) solid;
 }

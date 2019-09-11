@@ -31,6 +31,8 @@ export class EditFeedComponent implements OnInit {
     { id: 'Solid Black', val: 'https://dummyimage.com/900x700/000/000.png' },
     { id: 'Solid Grey', val: 'https://dummyimage.com/900x700/444/444.png' },
     { id: 'Solid White', val: 'https://dummyimage.com/900x700/fff/fff.png' },
+    { id: 'Art Picture', val: 'https://dummyimage.com/900x700/fff/fff.png', customClass: 'art-picture' },
+    { id: 'Post it', val: 'https://dummyimage.com/900x700/fefe7e/fefe7e.png', customClass: 'post-it' },
     { id: 'Custom', val: '' },
   ];
   imgType: string;
@@ -70,16 +72,20 @@ export class EditFeedComponent implements OnInit {
     switch (selectedType) {
       case 'Custom':
         this.feed.imgSource = '';
+        this.feed.customClass = '';
         break;
       case 'Random':
         this.feed.imgSource = `https://picsum.photos/900/700?random&t=${new Date().getTime() % 10}`;
+        this.feed.customClass = '';
         break;
       default:
         const ind = this.imgTypes.findIndex((e) => e.id === selectedType);
         if (ind >= 0) {
           this.feed.imgSource = this.imgTypes[ind].val;
+          this.feed.customClass = this.imgTypes[ind].customClass || '';
         } else {
           this.feed.imgSource = '';
+          this.feed.customClass = '';
         }
         break;
     }
