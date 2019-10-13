@@ -1,4 +1,5 @@
 export class Feed {
+  id: any;
   /**
    *
    */

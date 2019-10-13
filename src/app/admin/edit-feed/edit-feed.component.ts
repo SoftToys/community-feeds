@@ -17,7 +17,7 @@ export class FeedNgb extends Feed {
 })
 export class EditFeedComponent implements OnInit {
 
-  @Input() public feed: FeedNgb;
+  public feed: FeedNgb;
   days = [
     { id: 0, text: 'Sun' },
     { id: 1, text: 'Mon' },
@@ -42,8 +42,13 @@ export class EditFeedComponent implements OnInit {
 
   ngOnInit() {
     const empty = new Feed();
-    const editItem = JSON.parse(localStorage.getItem('edit-item')) || {};
-    this.feed = Object.assign(empty, this.feed, editItem);
+    let editItem = JSON.parse(localStorage.getItem('edit-item'));
+    const routedFeed = window.history.state.data;
+    if (routedFeed) {
+      editItem = {};
+    }
+    this.feed = Object.assign(empty, editItem, routedFeed);
+    localStorage.removeItem('edit-item')
     this.feed.ngbDateFrom = this.feed.validFromDate ? this.getDate(this.feed.validFromDate) : undefined;
     this.feed.ngbDateTo = this.feed.validToDate ? this.getDate(this.feed.validToDate) : undefined;
     this.imgType = this.getImageType(this.feed.imgSource, this.feed.customClass);
@@ -60,7 +65,6 @@ export class EditFeedComponent implements OnInit {
   getImageType(imgSource: string, customClass?: string): string {
     let type = 'Custom';
     if (imgSource) {
-      debugger;
       const ind = this.imgTypes.findIndex((e) => e.val === imgSource && (customClass === e.customClass));
       if (ind >= 0) {
         type = this.imgTypes[ind].id;

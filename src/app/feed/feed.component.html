@@ -1,4 +1,7 @@
-<div class="container h-100 p-1 over-hid">
+<a *ngIf="demo" [routerLink]="['/admin/edit']" routerLinkActive="router-link-active" class="btn btn-light"> <i
+    class="fa fa-arrow-left" aria-hidden="true"></i>
+</a>
+<div class="comp-container container h-100 p-1 over-hid">
   <div class="h-100 over-hid" *ngIf="feeds">
     <div class="slide-container h-90" (click)="nextSlide()">
 

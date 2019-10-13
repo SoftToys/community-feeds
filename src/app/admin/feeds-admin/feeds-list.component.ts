@@ -7,7 +7,7 @@ import { EditFeedComponent } from '../edit-feed/edit-feed.component';
 import { IdCard } from 'src/app/details';
 import { DataService } from 'src/app/data.service';
 import { Router } from '@angular/router';
-
+import * as uuid from 'uuid';
 
 @Component({
   selector: 'app-feeds-list',
@@ -56,9 +56,17 @@ export class FeedsListComponent implements OnInit {
     const url = `https://communityfeeds.blob.core.windows.net/${this.tenantId}/feeds.json?v=${now.unix()}`;
     this.http.get<Feed[]>(url).subscribe(feeds => {
       this.feeds = feeds;
+      // this.feeds.forEach(f => {
+      //   if (!f.id) {
+      //     f.id = uuid.v4();
+      //     this.containsChanges = true;
+      //   }
+      // });
       if (window.history.state.data) {
+        this.feeds = this.feeds.filter(f => f.id !== window.history.state.data.id);
         this.openNotification('You need to \'Publish\' your changes to take affect\nClick on Publish', 'publish');
         this.feeds.push(window.history.state.data);
+        this.containsChanges = true;
       }
       this.loading = false;
     },
@@ -120,7 +128,7 @@ export class FeedsListComponent implements OnInit {
    *   const modalRef = this.modalService.open(NgbdModalContent);
    */
   public open(feed?: Feed) {
-    this.router.navigate(['/admin/edit'], { state: { data: feed || { isActive: true } } })
+    this.router.navigate(['/admin/edit'], { state: { data: feed || { isActive: true, id: uuid.v4() } } })
     // const modalRef = this.modalService.open(EditFeedComponent, { size: 'lg' });
     this.containsChanges = true;
     // modalRef.componentInstance.feed = feed || { isActive: true };

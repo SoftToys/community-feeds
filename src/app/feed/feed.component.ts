@@ -17,6 +17,7 @@ export class FeedComponent implements OnInit {
   currentFeed: Feed;
   subscribeInterval: any;
   currentIndex = 0;
+  demo = false;
 
   constructor(private http: HttpClient, private dataService: DataService) {
 
@@ -37,6 +38,7 @@ export class FeedComponent implements OnInit {
         this.nextSlide();
       });
     } else {
+      this.demo = true;
       this.feeds = [window.history.state.demoFeed];
       this.currentIndex = 0;
       this.currentFeed = this.feeds[0];

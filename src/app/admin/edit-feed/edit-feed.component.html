@@ -1,90 +1,92 @@
-<div class="">
-  <a [routerLink]="['/admin']" routerLinkActive="router-link-active" class="btn btn-light"> <i class="fa fa-arrow-left"
-      aria-hidden="true"></i></a>
-  <h4 class="modal-title" id="modal-basic-title">Feed</h4>
-</div>
-<div class="modal-body">
-  <form #feedForm="ngForm">
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <label for="mainText">Text</label>
-          <textarea name="mainText" class="form-control" required type="text" [(ngModel)]="feed.mainText" maxLength='60'
-            rows="2"></textarea>
-        </div>
-        <div class="form-group">
-          <label for="mainText">Background</label>
-          <select [(ngModel)]="imgType" class="form-control" name="imgType" (ngModelChange)="selectImageType($event)">
-            <option *ngFor="let item of imgTypes" [value]="item.id">{{item.id}}</option>
-          </select>
-          <div class="form-group" *ngIf="imgType == 'Custom'">
-            <label for="exampleFormControlTextarea1">Custom Image link</label>
-            <input name="imgSource" placeholder="Custom Image link" class="form-control" type="text" required
-              minlength="5" [(ngModel)]="feed.imgSource">
+<a [routerLink]="['/admin']" routerLinkActive="router-link-active" class="btn btn-light"> <i class="fa fa-arrow-left"
+    aria-hidden="true"></i></a>
+<div class="container">
+  <div>
+    <h4 class="modal-title" id="modal-basic-title">Feed</h4>
+  </div>
+  <div class="modal-body">
+    <form #feedForm="ngForm">
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <label for="mainText">Text</label>
+            <textarea name="mainText" class="form-control" required type="text" [(ngModel)]="feed.mainText"
+              maxLength='60' rows="2"></textarea>
           </div>
-          <img *ngIf="feed.imgSource" src="{{feed.imgSource}}" alt="Solid Background"
-            class="border rounded-circle img-fluid mt-3" style="width: 20%">
+          <div class="form-group">
+            <label for="mainText">Background</label>
+            <select [(ngModel)]="imgType" class="form-control" name="imgType" (ngModelChange)="selectImageType($event)">
+              <option *ngFor="let item of imgTypes" [value]="item.id">{{item.id}}</option>
+            </select>
+            <div class="form-group" *ngIf="imgType == 'Custom'">
+              <label for="exampleFormControlTextarea1">Custom Image link</label>
+              <input name="imgSource" placeholder="Custom Image link" class="form-control" type="text" required
+                minlength="5" [(ngModel)]="feed.imgSource">
+            </div>
+            <img *ngIf="feed.imgSource" src="{{feed.imgSource}}" alt="Solid Background"
+              class="border rounded-circle img-fluid mt-3" style="width: 20%">
+          </div>
+          <div class="form-group">
+            <label for="mainText">Sub Text</label>
+            <input name="subText" placeholder="Custom Image link" class="form-control" type="text" maxlength='85'
+              [(ngModel)]="feed.subText">
+          </div>
+          <div class="form-group">
+            <label for="mainText">Sub Image Link</label>
+            <input name="subImgSource" class="form-control" type="text" [(ngModel)]="feed.subImgSource">
+          </div>
         </div>
-        <div class="form-group">
-          <label for="mainText">Sub Text</label>
-          <input name="subText" placeholder="Custom Image link" class="form-control" type="text" maxlength='85'
-            [(ngModel)]="feed.subText">
-        </div>
-        <div class="form-group">
-          <label for="mainText">Sub Image Link</label>
-          <input name="subImgSource" class="form-control" type="text" [(ngModel)]="feed.subImgSource">
-        </div>
-      </div>
-      <div class="col-6 border-left">
-        <div class="form-group">
-          <label for="mainText">On Days</label>
-          <ng-multiselect-dropdown name="days" [(ngModel)]="feed.day" [data]="days" [settings]="dropdownSettings">
-          </ng-multiselect-dropdown>
-        </div>
-        <div class="form-group">
-          <label for="mainText">From Hour</label>
-          <input name="fromHour" class="form-control" type="number" min="0" max="23" [(ngModel)]="feed.fromHour">
-        </div>
-        <div class="form-group">
-          <label for="mainText">Till Hour</label>
-          <input name="tillHour" class="form-control" type="number" min="0" max="23" [(ngModel)]="feed.tillHour">
-        </div>
-        <div class="form-group">
-          <label for="fromDate">From Date</label>
-          <div class="input-group">
-            <input id="fromDate" class="form-control" placeholder="yyyy-mm-dd" name="fromd" ngbDatepicker
-              #fromd="ngbDatepicker" [readonly]="true" d (dateSelect)="onFromDateSelect($event)"
-              [(ngModel)]="feed.ngbDateFrom">
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary calendar" (click)="fromd.toggle()" type="button">
-                <i class="fa fa-calendar" aria-hidden="true"></i>
-              </button>
+        <div class="col-6 border-left">
+          <div class="form-group">
+            <label for="mainText">On Days</label>
+            <ng-multiselect-dropdown name="days" [(ngModel)]="feed.day" [data]="days" [settings]="dropdownSettings">
+            </ng-multiselect-dropdown>
+          </div>
+          <div class="form-group">
+            <label for="mainText">From Hour</label>
+            <input name="fromHour" class="form-control" type="number" min="0" max="23" [(ngModel)]="feed.fromHour">
+          </div>
+          <div class="form-group">
+            <label for="mainText">Till Hour</label>
+            <input name="tillHour" class="form-control" type="number" min="0" max="23" [(ngModel)]="feed.tillHour">
+          </div>
+          <div class="form-group">
+            <label for="fromDate">From Date</label>
+            <div class="input-group">
+              <input id="fromDate" class="form-control" placeholder="yyyy-mm-dd" name="fromd" ngbDatepicker
+                #fromd="ngbDatepicker" [readonly]="true" d (dateSelect)="onFromDateSelect($event)"
+                [(ngModel)]="feed.ngbDateFrom">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="fromd.toggle()" type="button">
+                  <i class="fa fa-calendar" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="toDate">Till Date</label>
+            <div class="input-group">
+              <input id="toDate" [readonly]="true" class="form-control" [(ngModel)]="feed.ngbDateTo"
+                placeholder="yyyy-mm-dd" name="tilld" ngbDatepicker #tilld="ngbDatepicker"
+                (dateSelect)="onTillDateSelect($event)">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="tilld.toggle()" type="button">
+                  <i class="fa fa-calendar" aria-hidden="true"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <div class="form-group">
-          <label for="toDate">Till Date</label>
-          <div class="input-group">
-            <input id="toDate" [readonly]="true" class="form-control" [(ngModel)]="feed.ngbDateTo"
-              placeholder="yyyy-mm-dd" name="tilld" ngbDatepicker #tilld="ngbDatepicker"
-              (dateSelect)="onTillDateSelect($event)">
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary calendar" (click)="tilld.toggle()" type="button">
-                <i class="fa fa-calendar" aria-hidden="true"></i>
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
-  </form>
-</div>
-<div class="modal-footer">
-  <small class="text-info">{{shownTimeDescription}}</small>
-  <!-- <a type="button" class="btn btn-light" [routerLink]="['/feed']" [state]="{ demoFeed: feed  }"
+    </form>
+  </div>
+  <div class="modal-footer">
+    <small class="text-info">{{shownTimeDescription}}</small>
+    <!-- <a type="button" class="btn btn-light" [routerLink]="['/feed']" [state]="{ demoFeed: feed  }"
     routerLinkActive="router-link-active">Preview</a> -->
 
-  <button type="button" class="btn btn-outline-dark" (click)="showPreview()"
-    [disabled]="!feedForm.form.valid">preview</button>
-  <button type="button" class="btn btn-outline-dark" (click)="save()" [disabled]="!feedForm.form.valid">Save</button>
+    <button type="button" class="btn btn-outline-dark" (click)="showPreview()"
+      [disabled]="!feedForm.form.valid">preview</button>
+    <button type="button" class="btn btn-outline-dark" (click)="save()" [disabled]="!feedForm.form.valid">Save</button>
+  </div>
 </div>
