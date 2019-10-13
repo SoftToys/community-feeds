@@ -7,7 +7,7 @@
   <div class="modal-body">
     <form #feedForm="ngForm">
       <div class="row">
-        <div class="col-6">
+        <div class="col-lg-6">
           <div class="form-group">
             <label for="mainText">Text</label>
             <textarea name="mainText" class="form-control" required type="text" [(ngModel)]="feed.mainText"
@@ -36,7 +36,7 @@
             <input name="subImgSource" class="form-control" type="text" [(ngModel)]="feed.subImgSource">
           </div>
         </div>
-        <div class="col-6 border-left">
+        <div class="col-lg-6 border-left">
           <div class="form-group">
             <label for="mainText">On Days</label>
             <ng-multiselect-dropdown name="days" [(ngModel)]="feed.day" [data]="days" [settings]="dropdownSettings">
