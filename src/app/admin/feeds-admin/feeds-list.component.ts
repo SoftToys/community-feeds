@@ -6,6 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EditFeedComponent } from '../edit-feed/edit-feed.component';
 import { IdCard } from 'src/app/details';
 import { DataService } from 'src/app/data.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -28,7 +29,7 @@ export class FeedsListComponent implements OnInit {
   confirmText: string;
   dontShow: boolean;
   @ViewChild('confirmation') public confirmation: TemplateRef<any>;
-  constructor(private http: HttpClient, private modalService: NgbModal, private dataService: DataService) { }
+  constructor(private http: HttpClient, private dataService: DataService, private router: Router, private modalService: NgbModal) { }
 
   ngOnInit() {
     this.code = localStorage.getItem('admin-code');
@@ -55,6 +56,10 @@ export class FeedsListComponent implements OnInit {
     const url = `https://communityfeeds.blob.core.windows.net/${this.tenantId}/feeds.json?v=${now.unix()}`;
     this.http.get<Feed[]>(url).subscribe(feeds => {
       this.feeds = feeds;
+      if (window.history.state.data) {
+        this.openNotification('You need to \'Publish\' your changes to take affect\nClick on Publish', 'publish');
+        this.feeds.push(window.history.state.data);
+      }
       this.loading = false;
     },
       (err: any) => {
@@ -115,21 +120,21 @@ export class FeedsListComponent implements OnInit {
    *   const modalRef = this.modalService.open(NgbdModalContent);
    */
   public open(feed?: Feed) {
-
-    const modalRef = this.modalService.open(EditFeedComponent, { size: 'lg' });
+    this.router.navigate(['/admin/edit'], { state: { data: feed || { isActive: true } } })
+    // const modalRef = this.modalService.open(EditFeedComponent, { size: 'lg' });
     this.containsChanges = true;
-    modalRef.componentInstance.feed = feed || { isActive: true };
-    modalRef.result.then((result) => {
-      if (feed) { // new
-        this.feeds = this.feeds.filter((v) => v !== feed);
-      }
-      this.feeds.push(result);
-      this.openNotification('You need to \'Publish\' your changes to take affect\nClick on Publish', 'publish');
+    // modalRef.componentInstance.feed = feed || { isActive: true };
+    // modalRef.result.then((result) => {
+    //   if (feed) { // new
+    //     this.feeds = this.feeds.filter((v) => v !== feed);
+    //   }
+    //   this.feeds.push(result);
+    //   this.openNotification('You need to \'Publish\' your changes to take affect\nClick on Publish', 'publish');
 
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed`;
-    });
+    //   this.closeResult = `Closed with: ${result}`;
+    // }, (reason) => {
+    //   this.closeResult = `Dismissed`;
+    // });
   }
   openNotification(text: string, id: string) {
     if (JSON.parse(window.localStorage.getItem(id)) === true) {
@@ -167,20 +172,20 @@ export class FeedsListComponent implements OnInit {
     const now = moment();
     return this.dataService.feedFilter(now, feed);
   }
-  public createNew(content) {
-    this.currentlyEditing = { isActive: true };
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      this.feeds.push(result);
-    }, (reason) => {
-      this.closeResult = `Dismissed`;
-    });
-  }
+  // public createNew(content) {
+  //   this.currentlyEditing = { isActive: true };
+  //   this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+  //     this.feeds.push(result);
+  //   }, (reason) => {
+  //     this.closeResult = `Dismissed`;
+  //   });
+  // }
 
-  public edit(content, feed: Feed) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed`;
-    });
-  }
+  // public edit(content, feed: Feed) {
+  //   this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+  //     this.closeResult = `Closed with: ${result}`;
+  //   }, (reason) => {
+  //     this.closeResult = `Dismissed`;
+  //   });
+  // }
 }

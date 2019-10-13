@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Feed } from './feed';
 import { NgbSlideEvent } from '@ng-bootstrap/ng-bootstrap/carousel/carousel';
 import { HttpClient } from '@angular/common/http';
@@ -17,10 +17,30 @@ export class FeedComponent implements OnInit {
   currentFeed: Feed;
   subscribeInterval: any;
   currentIndex = 0;
+
   constructor(private http: HttpClient, private dataService: DataService) {
-    this.feedFile = dataService.tenantId;
-    this.fetchFeeds();
-    setTimeout(() => { window.location.reload(); }, 24 * 60 * 60 * 1000);
+
+  }
+
+  ngOnInit() {
+    if (!window.history.state.demoFeed) {
+      this.feedFile = this.dataService.tenantId;
+      this.fetchFeeds();
+      setTimeout(() => { window.location.reload(); }, 24 * 60 * 60 * 1000);
+
+      const refreshInterval = interval(600 * 1000);
+      this.subscribeInterval = refreshInterval.subscribe(() => {
+        this.fetchFeeds();
+      });
+      const changeSlide = interval(10 * 1000);
+      changeSlide.subscribe(() => {
+        this.nextSlide();
+      });
+    } else {
+      this.feeds = [window.history.state.demoFeed];
+      this.currentIndex = 0;
+      this.currentFeed = this.feeds[0];
+    }
   }
 
   public getMainImage(f: Feed): string {
@@ -46,16 +66,5 @@ export class FeedComponent implements OnInit {
       this.currentIndex = (this.currentIndex + 1) % this.feeds.length;
       this.currentFeed = this.feeds[this.currentIndex];
     }
-  }
-
-  ngOnInit() {
-    const refreshInterval = interval(600 * 1000);
-    this.subscribeInterval = refreshInterval.subscribe(() => {
-      this.fetchFeeds();
-    });
-    const changeSlide = interval(10 * 1000);
-    changeSlide.subscribe(() => {
-      this.nextSlide();
-    });
   }
 }

@@ -3,6 +3,7 @@ import { FeedComponent } from 'src/app/feed/feed.component';
 import { Feed } from 'src/app/feed/feed';
 import { NgbActiveModal, NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { debug } from 'util';
+import { Router } from '@angular/router';
 
 export class FeedNgb extends Feed {
   ngbDateFrom: NgbDateStruct;
@@ -37,11 +38,12 @@ export class EditFeedComponent implements OnInit {
   ];
   imgType: string;
   dropdownSettings: any;
-  constructor(public activeModal: NgbActiveModal) { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
     const empty = new Feed();
-    this.feed = Object.assign(empty, this.feed);
+    const editItem = JSON.parse(localStorage.getItem('edit-item')) || {};
+    this.feed = Object.assign(empty, this.feed, editItem);
     this.feed.ngbDateFrom = this.feed.validFromDate ? this.getDate(this.feed.validFromDate) : undefined;
     this.feed.ngbDateTo = this.feed.validToDate ? this.getDate(this.feed.validToDate) : undefined;
     this.imgType = this.getImageType(this.feed.imgSource, this.feed.customClass);
@@ -106,24 +108,16 @@ export class EditFeedComponent implements OnInit {
     return '';
   }
   onFromDateSelect(e: NgbDate) {
-    // (this.feed as any).ngbDateFrom = e;
     this.feed.validFromDate = `${e.day}/${e.month}/${e.year}`;
   }
   onTillDateSelect(e: NgbDate) {
-    // (this.feed as any).ngbDateTo = e;
     this.feed.validToDate = `${e.day}/${e.month}/${e.year}`;
   }
+  showPreview() {
+    localStorage.setItem('edit-item', JSON.stringify(this.feed));
+    this.router.navigate(['feed'], { state: { demoFeed: this.feed } })
+  }
   save() {
-    this.activeModal.close(this.feed);
+    this.router.navigate(['admin'], { state: { data: this.feed } })
   }
 }
-
-
-
-// }
-
-// onSelectAll(items: any) {
-//   console.log(items);
-// }
-
-// }

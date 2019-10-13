@@ -7,6 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditFeedComponent } from './edit-feed/edit-feed.component';
 import { FormsModule } from '@angular/forms';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { AppModule } from '../app.module';
 
 @NgModule({
   declarations: [
