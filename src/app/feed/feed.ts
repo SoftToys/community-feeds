@@ -23,4 +23,5 @@ export class Feed {
   validFromDate?: string;
   validToDate?: string;
   customClass?: string;
+  durationSeconds = 10;
 }

@@ -20,8 +20,19 @@
             </select>
             <div class="form-group" *ngIf="imgType == 'Custom'">
               <label for="exampleFormControlTextarea1">Custom Image link</label>
+
               <input name="imgSource" placeholder="Custom Image link" class="form-control" type="text" required
                 minlength="5" [(ngModel)]="feed.imgSource">
+              <small>
+                <i class="fas fa-question-circle"></i>
+                Search anywhere in the web, right click an image, <kbd>"Copy Link Address"</kbd> and <mark>paste
+                  link</mark> in "Custom Image
+                link"
+              </small>
+              <br />
+              <a class="small" href="https://www.google.com/search?tbm=isch&q={{feed.mainText}}" target="_blank">Seacrh
+                for an image
+                ..</a>
             </div>
             <img *ngIf="feed.imgSource" src="{{feed.imgSource}}" alt="Solid Background"
               class="border rounded-circle img-fluid mt-3" style="width: 20%">
@@ -75,6 +86,15 @@
                 </button>
               </div>
             </div>
+          </div>
+          <div class="form-group">
+            <label for="mainText">Duration</label>
+            <select [(ngModel)]="feed.durationSeconds" class="form-control" name="duration">
+              <option [value]="10">10 Sec</option>
+              <option [value]="5">5 Sec</option>
+              <option [value]="20">20 Sec</option>
+              <option [value]="30">30 Sec</option>
+            </select>
           </div>
         </div>
       </div>

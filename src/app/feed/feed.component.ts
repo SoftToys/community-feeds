@@ -18,6 +18,7 @@ export class FeedComponent implements OnInit {
   subscribeInterval: any;
   currentIndex = 0;
   demo = false;
+  changeSlideTO: NodeJS.Timer;
 
   constructor(private http: HttpClient, private dataService: DataService) {
 
@@ -33,10 +34,10 @@ export class FeedComponent implements OnInit {
       this.subscribeInterval = refreshInterval.subscribe(() => {
         this.fetchFeeds();
       });
-      const changeSlide = interval(10 * 1000);
-      changeSlide.subscribe(() => {
-        this.nextSlide();
-      });
+      // const changeSlide = interval(10 * 1000);
+      // changeSlide.subscribe(() => {
+      //   this.nextSlide();
+      // });
     } else {
       this.demo = true;
       this.feeds = [window.history.state.demoFeed];
@@ -60,6 +61,8 @@ export class FeedComponent implements OnInit {
       if (feeds && feeds.length) {
         this.currentIndex = 0;
         this.currentFeed = this.feeds[0];
+        if (this.changeSlideTO) { clearTimeout(this.changeSlideTO); }
+        this.nextSlide();
       }
     });
   }
@@ -67,6 +70,10 @@ export class FeedComponent implements OnInit {
     if (this.feeds && this.feeds.length > 0) {
       this.currentIndex = (this.currentIndex + 1) % this.feeds.length;
       this.currentFeed = this.feeds[this.currentIndex];
+      this.changeSlideTO = setTimeout(() => {
+        this.nextSlide();
+      }, (this.currentFeed.durationSeconds || 10) * 1000);
     }
+
   }
 }
