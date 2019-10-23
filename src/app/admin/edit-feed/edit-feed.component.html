@@ -9,17 +9,18 @@
       <div class="row">
         <div class="col-lg-6">
           <div class="form-group">
-            <label for="mainText">Text</label>
+            <label for="mainText">Text<span class="required-field-mark">*</span></label>
             <textarea name="mainText" class="form-control" required type="text" [(ngModel)]="feed.mainText"
-              maxLength='60' rows="2"></textarea>
+              maxLength='70' rows="2"></textarea>
           </div>
           <div class="form-group">
-            <label for="mainText">Background</label>
+            <label for="mainText">Background<span class="required-field-mark">*</span></label>
             <select [(ngModel)]="imgType" class="form-control" name="imgType" (ngModelChange)="selectImageType($event)">
               <option *ngFor="let item of imgTypes" [value]="item.id">{{item.id}}</option>
             </select>
             <div class="form-group" *ngIf="imgType == 'Custom'">
-              <label for="exampleFormControlTextarea1">Custom Image link</label>
+              <label for="exampleFormControlTextarea1">Custom Image link<span
+                  class="required-field-mark">*</span></label>
 
               <input name="imgSource" placeholder="Custom Image link" class="form-control" type="text" required
                 minlength="5" [(ngModel)]="feed.imgSource">
@@ -39,8 +40,8 @@
           </div>
           <div class="form-group">
             <label for="mainText">Sub Text</label>
-            <input name="subText" placeholder="Custom Image link" class="form-control" type="text" maxlength='85'
-              [(ngModel)]="feed.subText">
+            <textarea name="subText" placeholder="Custom Image link" class="form-control" type="text" maxlength='85'
+              [(ngModel)]="feed.subText" rows="2"></textarea>
           </div>
           <div class="form-group">
             <label for="mainText">Sub Image Link</label>

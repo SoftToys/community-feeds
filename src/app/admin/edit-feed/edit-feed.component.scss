@@ -1,1 +1,15 @@
 
+.ng-valid[required], .ng-valid.required {
+  border-bottom: 1px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form) {
+  &.ng-touched{
+    border-bottom: 2px solid #dc3545; /* red */
+  }
+}
+.required-field-mark{
+  color: #dc3545;
+  vertical-align: middle;
+  padding-left: 3px;
+}
