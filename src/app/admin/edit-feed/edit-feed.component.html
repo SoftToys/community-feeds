@@ -9,17 +9,17 @@
       <div class="row">
         <div class="col-lg-6">
           <div class="form-group">
-            <label for="mainText">Text<span class="required-field-mark">*</span></label>
+            <label for="mainText" translate>Text<span class="required-field-mark">*</span></label>
             <textarea name="mainText" class="form-control" required type="text" [(ngModel)]="feed.mainText"
               maxLength='70' rows="2"></textarea>
           </div>
           <div class="form-group">
-            <label for="mainText">Background<span class="required-field-mark">*</span></label>
+            <label for="mainText" translate>Background<span class="required-field-mark">*</span></label>
             <select [(ngModel)]="imgType" class="form-control" name="imgType" (ngModelChange)="selectImageType($event)">
-              <option *ngFor="let item of imgTypes" [value]="item.id">{{item.id}}</option>
+              <option *ngFor="let item of imgTypes" [value]="item.id" translate> {{item.id}} </option>
             </select>
             <div class="form-group" *ngIf="imgType == 'Custom'">
-              <label for="exampleFormControlTextarea1">Custom Image link<span
+              <label for="exampleFormControlTextarea1" translate>Custom Image link<span
                   class="required-field-mark">*</span></label>
 
               <input name="imgSource" placeholder="Custom Image link" class="form-control" type="text" required
@@ -39,31 +39,31 @@
               class="border rounded-circle img-fluid mt-3" style="width: 20%">
           </div>
           <div class="form-group">
-            <label for="mainText">Sub Text</label>
+            <label for="mainText" translate>Sub Text</label>
             <textarea name="subText" placeholder="Custom Image link" class="form-control" type="text" maxlength='85'
               [(ngModel)]="feed.subText" rows="2"></textarea>
           </div>
           <div class="form-group">
-            <label for="mainText">Sub Image Link</label>
+            <label for="mainText" translate>Sub Image Link</label>
             <input name="subImgSource" class="form-control" type="text" [(ngModel)]="feed.subImgSource">
           </div>
         </div>
         <div class="col-lg-6 border-left">
           <div class="form-group">
-            <label for="mainText">On Days</label>
+            <label for="mainText" translate>On Days</label>
             <ng-multiselect-dropdown name="days" [(ngModel)]="feed.day" [data]="days" [settings]="dropdownSettings">
             </ng-multiselect-dropdown>
           </div>
           <div class="form-group">
-            <label for="mainText">From Hour</label>
+            <label for="mainText" translate>From Hour</label>
             <input name="fromHour" class="form-control" type="number" min="0" max="23" [(ngModel)]="feed.fromHour">
           </div>
           <div class="form-group">
-            <label for="mainText">Till Hour</label>
+            <label for="mainText" translate>Till Hour</label>
             <input name="tillHour" class="form-control" type="number" min="0" max="23" [(ngModel)]="feed.tillHour">
           </div>
           <div class="form-group">
-            <label for="fromDate">From Date</label>
+            <label for="fromDate" translate>From Date</label>
             <div class="input-group">
               <input id="fromDate" class="form-control" placeholder="yyyy-mm-dd" name="fromd" ngbDatepicker
                 #fromd="ngbDatepicker" [readonly]="true" d (dateSelect)="onFromDateSelect($event)"
@@ -76,7 +76,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="toDate">Till Date</label>
+            <label for="toDate" translate>Till Date</label>
             <div class="input-group">
               <input id="toDate" [readonly]="true" class="form-control" [(ngModel)]="feed.ngbDateTo"
                 placeholder="yyyy-mm-dd" name="tilld" ngbDatepicker #tilld="ngbDatepicker"
@@ -89,12 +89,12 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="mainText">Duration</label>
+            <label for="mainText" translate>Duration</label>
             <select [(ngModel)]="feed.durationSeconds" class="form-control" name="duration">
-              <option [value]="10">10 Sec</option>
-              <option [value]="5">5 Sec</option>
-              <option [value]="20">20 Sec</option>
-              <option [value]="30">30 Sec</option>
+              <option [value]="10" translate>10 Sec</option>
+              <option [value]="5" translate>5 Sec</option>
+              <option [value]="20" translate>20 Sec</option>
+              <option [value]="30" translate>30 Sec</option>
             </select>
           </div>
         </div>
@@ -106,8 +106,9 @@
     <!-- <a type="button" class="btn btn-light" [routerLink]="['/feed']" [state]="{ demoFeed: feed  }"
     routerLinkActive="router-link-active">Preview</a> -->
 
-    <button type="button" class="btn btn-outline-dark" (click)="showPreview()"
-      [disabled]="!feedForm.form.valid">preview</button>
-    <button type="button" class="btn btn-outline-dark" (click)="save()" [disabled]="!feedForm.form.valid">Save</button>
+    <button type="button" class="btn btn-outline-dark" (click)="showPreview()" [disabled]="!feedForm.form.valid"
+      translate>Preview</button>
+    <button type="button" class="btn btn-outline-dark" (click)="save()" [disabled]="!feedForm.form.valid"
+      translate>Save</button>
   </div>
 </div>

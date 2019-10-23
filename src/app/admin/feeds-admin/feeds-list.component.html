@@ -10,11 +10,16 @@
       <span class="h2 title-header">Feeds admin</span>
     </div>
     <div class="col-6 text-right">
+      <span class="h6 pl-5 lang-switch" *ngIf="translate.currentLang != 'en'" (click)="switchLang('en')">ENG</span>
+      <span class="h6 pl-5 lang-switch" *ngIf="translate.currentLang != 'he'" (click)="switchLang('he')">עברית</span>
       <i *ngIf="codeOk" class="pl-5 fas fa-user header-action" (click)="cleanCode()" title="logout admin"></i>
+
       <span *ngIf="card" class="pl-5 header-action" (click)="cleanTenant()" title="change tenant">
         <i class="fas fa-home"></i>
         <span class="h3 title-name">{{card.greeting}}</span>
       </span>
+
+
     </div>
   </div>
 </div>
@@ -37,15 +42,15 @@
   <h5 class="text-danger">{{errorMsg}}</h5>
   <div class="main-list" *ngIf="feeds">
     <div class="header-buttons">
-      <button class="btn btn-primary btn-sm" [disabled]="loading" (click)="open()">+ Add</button>
-      <button class="btn btn-danger btn-sm" (click)="publish()"
-        [disabled]="!containsChanges || loading">Publish</button>
+      <button class="btn btn-primary btn-sm" [disabled]="loading" (click)="open()" translate>+ Add</button>
+      <button class="btn btn-danger btn-sm" (click)="publish()" [disabled]="!containsChanges || loading"
+        translate>Publish</button>
     </div>
     <div *ngIf="feeds">
       <div class="row table-header-row">
         <div class="col-1"></div>
-        <div class="col-6">Text</div>
-        <div class="col-2">Image</div>
+        <div class="col-6" translate>Text</div>
+        <div class="col-2" translate>Image</div>
         <div class="col-2"></div>
       </div>
       <div class="row item-row" *ngFor="let feed of feeds;index as i">
@@ -71,7 +76,7 @@
 
 <ng-template #confirmation let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Tip!</h4>
+    <h4 class="modal-title" id="modal-basic-title" translate>Tip!</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -82,11 +87,11 @@
     </div>
     <div class="">
       <input type="checkbox" name="dontShow" id="dontShow" [(ngModel)]="dontShow">
-      <label for="dontShow">dont show this again</label>
+      <label for="dontShow" translate>dont show this again</label>
     </div>
   </div>
   <div class="modal-footer">
 
-    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')" translate>Ok</button>
   </div>
 </ng-template>

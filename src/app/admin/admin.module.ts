@@ -7,7 +7,14 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditFeedComponent } from './edit-feed/edit-feed.component';
 import { FormsModule } from '@angular/forms';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import { AppModule } from '../app.module';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient } from '@angular/common/http';
+
+// AoT requires an exported function for factories
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 
 @NgModule({
   declarations: [
@@ -19,7 +26,14 @@ import { AppModule } from '../app.module';
     CommonModule,
     NgbModule,
     AdminRoutingModule,
-    NgMultiSelectDropDownModule
+    NgMultiSelectDropDownModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   entryComponents: [EditFeedComponent]
 })

@@ -8,6 +8,7 @@ import { IdCard } from 'src/app/details';
 import { DataService } from 'src/app/data.service';
 import { Router } from '@angular/router';
 import * as uuid from 'uuid';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-feeds-list',
@@ -29,7 +30,12 @@ export class FeedsListComponent implements OnInit {
   confirmText: string;
   dontShow: boolean;
   @ViewChild('confirmation') public confirmation: TemplateRef<any>;
-  constructor(private http: HttpClient, private dataService: DataService, private router: Router, private modalService: NgbModal) { }
+  constructor(
+    private http: HttpClient,
+    private dataService: DataService,
+    private router: Router,
+    private modalService: NgbModal,
+    public translate: TranslateService) { }
 
   ngOnInit() {
     this.code = localStorage.getItem('admin-code');
@@ -39,6 +45,10 @@ export class FeedsListComponent implements OnInit {
     if (this.tenantId) {
       this.fetchIdCard();
     }
+  }
+  switchLang(lang: string) {
+    localStorage.setItem('lang', lang);
+    this.translate.use(lang);
   }
   setCode() {
     localStorage.setItem('admin-code', this.code);
@@ -128,7 +138,7 @@ export class FeedsListComponent implements OnInit {
    *   const modalRef = this.modalService.open(NgbdModalContent);
    */
   public open(feed?: Feed) {
-    this.router.navigate(['/admin/edit'], { state: { data: feed || { isActive: true, id: uuid.v4() } } })
+    this.router.navigate(['/admin/edit'], { state: { data: feed || { isActive: true, id: uuid.v4() } } });
     // const modalRef = this.modalService.open(EditFeedComponent, { size: 'lg' });
     this.containsChanges = true;
     // modalRef.componentInstance.feed = feed || { isActive: true };
