@@ -48,7 +48,7 @@ export class EditFeedComponent implements OnInit {
       editItem = {};
     }
     this.feed = Object.assign(empty, editItem, routedFeed);
-    localStorage.removeItem('edit-item')
+    localStorage.removeItem('edit-item');
     this.feed.ngbDateFrom = this.feed.validFromDate ? this.getDate(this.feed.validFromDate) : undefined;
     this.feed.ngbDateTo = this.feed.validToDate ? this.getDate(this.feed.validToDate) : undefined;
     this.imgType = this.getImageType(this.feed.imgSource, this.feed.customClass);
@@ -119,9 +119,9 @@ export class EditFeedComponent implements OnInit {
   }
   showPreview() {
     localStorage.setItem('edit-item', JSON.stringify(this.feed));
-    this.router.navigate(['feed'], { state: { demoFeed: this.feed } })
+    this.router.navigate(['feed'], { state: { demoFeed: this.feed } });
   }
   save() {
-    this.router.navigate(['admin'], { state: { data: this.feed } })
+    this.router.navigate(['admin'], { state: { data: this.feed } });
   }
 }

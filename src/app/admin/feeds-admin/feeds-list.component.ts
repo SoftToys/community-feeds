@@ -138,21 +138,8 @@ export class FeedsListComponent implements OnInit {
    *   const modalRef = this.modalService.open(NgbdModalContent);
    */
   public open(feed?: Feed) {
-    this.router.navigate(['/admin/edit'], { state: { data: feed || { isActive: true, id: uuid.v4() } } });
-    // const modalRef = this.modalService.open(EditFeedComponent, { size: 'lg' });
+    this.router.navigate(['/admin/edit'], { state: { data: feed || { isActive: true, id: uuid.v4(), customClass: '', imgSource: 'https://dummyimage.com/900x700/444/444.png' } as Feed } });
     this.containsChanges = true;
-    // modalRef.componentInstance.feed = feed || { isActive: true };
-    // modalRef.result.then((result) => {
-    //   if (feed) { // new
-    //     this.feeds = this.feeds.filter((v) => v !== feed);
-    //   }
-    //   this.feeds.push(result);
-    //   this.openNotification('You need to \'Publish\' your changes to take affect\nClick on Publish', 'publish');
-
-    //   this.closeResult = `Closed with: ${result}`;
-    // }, (reason) => {
-    //   this.closeResult = `Dismissed`;
-    // });
   }
   openNotification(text: string, id: string) {
     if (JSON.parse(window.localStorage.getItem(id)) === true) {
