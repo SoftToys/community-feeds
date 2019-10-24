@@ -10,8 +10,10 @@
       <span class="h2 title-header">Feeds admin</span>
     </div>
     <div class="col-6 text-right">
-      <span class="h6 pl-5 lang-switch" *ngIf="translate.currentLang != 'en'" (click)="switchLang('en')">ENG</span>
-      <span class="h6 pl-5 lang-switch" *ngIf="translate.currentLang != 'he'" (click)="switchLang('he')">עברית</span>
+      <span class="text-secondary h6 pl-5 lang-switch" *ngIf="translate.currentLang != 'en'"
+        (click)="switchLang('en')">ENG</span>
+      <span class="text-secondary h6 pl-5 lang-switch" *ngIf="translate.currentLang != 'he'"
+        (click)="switchLang('he')">עברית</span>
       <i *ngIf="codeOk" class="pl-5 fas fa-user header-action" (click)="cleanCode()" title="logout admin"></i>
 
       <span *ngIf="card" class="pl-5 header-action" (click)="cleanTenant()" title="change tenant">

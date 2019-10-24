@@ -74,4 +74,8 @@
 }
 .lang-switch{
   cursor: pointer;
+  &:hover{
+    text-decoration:underline;
+    color: white!important;
+}
 }
