@@ -5,4 +5,5 @@ export class IdCard {
   magicSeaWeedKey: string;
   magicSeaWeedSpot: number;
   newsApiKey: string;
+  wavesSpot: string;
 }

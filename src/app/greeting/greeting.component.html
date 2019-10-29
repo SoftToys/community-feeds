@@ -1,4 +1,4 @@
-<div *ngIf="idCard" class="bg-dark text-center text-white h-100">
+<div *ngIf="idCard" class="bg-dark text-center text-white h-100 pt-1">
   <div class="greet-text h1">
     {{idCard.greeting}}
   </div>
@@ -7,20 +7,26 @@
     <span>{{now | date:"EEEE, MMMM d"}}</span>
   </div>
   <div class="current-time feed-text clock-text">
-    <i class="far fa-clock"></i>
+    <img src="assets/images/clock2.png" class="clock-icon" alt="" srcset="">
+    <!-- <i class="far fa-clock"></i> -->
     <span>{{now | date:"HH:mm"}}</span>
   </div>
   <hr />
   <div class="current-weather-text">
-    <i class="fas fa-cloud-sun"></i>
+    <!-- <i class="fas fa-cloud-sun"></i> -->
+    <img src="assets/images/temperature.png" class="temperature-icon" alt="" srcset="">
     <span>{{temperature}}&deg;</span>/
     <i class="fas fa-tint"></i>
     <span>{{humidity}} </span>
   </div>
   <hr />
   <div *ngIf="swellPeriod" class="current-weather-text">
+    <div>{{idCard.wavesSpot}} </div>
     <div>
-      <i class="fas fa-umbrella-beach"></i>
+      <img *ngFor="let star of wavesStars" src="assets/images/star.png" class="wave-star-icon" alt="">
+    </div>
+    <div>
+      <img src="assets/images/wave.png" class="wave-icon" alt="" srcset="">
       <span>{{swellHeight}}m</span>/
       <span>{{swellPeriod}}sec </span>
     </div>

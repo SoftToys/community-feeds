@@ -19,6 +19,7 @@ export class GreetingComponent implements OnInit {
   swellPeriod: any;
   idCard: IdCard;
   greeting: string;
+  wavesStars = [];
   constructor(private http: HttpClient, private ref: ChangeDetectorRef, private dataService: DataService) {
     this.now = new Date();
     dataService.details.subscribe(details => {
@@ -58,6 +59,7 @@ export class GreetingComponent implements OnInit {
       (d) => {
         this.swellHeight = d[0].swell.components.combined.height;
         this.swellPeriod = d[0].swell.components.combined.period;
+        this.wavesStars = d[0].solidRating > 0 ? Array(d[0].solidRating) : [];
         this.ref.detectChanges();
       }, callback);
   }
