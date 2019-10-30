@@ -35,6 +35,11 @@ hr {
 
 .wave-star-icon{
   height: 20px;
+  opacity: 0.1;
+}
+.solid-star{
+  @extend .wave-star-icon;
+  opacity: 1;
 }
 .waves-container{
   font-size: smaller;

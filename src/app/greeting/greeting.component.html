@@ -23,7 +23,8 @@
   <div *ngIf="swellPeriod" class="current-weather-text">
     <div>{{idCard.wavesSpot}} </div>
     <div>
-      <img *ngFor="let star of wavesStars" src="assets/images/star.png" class="wave-star-icon" alt="">
+      <img *ngFor="let star of wavesMaxDummyStars;let i = index" src="assets/images/star.png"
+        [class.solid-star]="i < wavesStars" class="wave-star-icon" alt="">
     </div>
     <div class="waves-container">
       <img src="assets/images/wave.png" class="wave-icon" alt="" srcset="">
