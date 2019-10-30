@@ -13,7 +13,7 @@
   </div>
   <hr />
   <div class="current-weather-text">
-    <div>
+    <div *ngIf="weather && weather[0]">
       <span class="weather-description">{{weather[0].description}}</span>
       <img src="https://openweathermap.org/img/wn/{{weather[0].icon}}@2x.png" alt="" srcset="">
     </div>
