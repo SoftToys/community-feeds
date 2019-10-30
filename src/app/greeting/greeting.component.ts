@@ -21,6 +21,7 @@ export class GreetingComponent implements OnInit {
   greeting: string;
   wavesStars = 0;
   wavesMaxDummyStars = Array(5);
+  weather: [{ icon: string, description: string, main: string }];
   constructor(private http: HttpClient, private ref: ChangeDetectorRef, private dataService: DataService) {
     this.now = new Date();
     dataService.details.subscribe(details => {
@@ -49,6 +50,7 @@ export class GreetingComponent implements OnInit {
       .subscribe((d: any) => {
         this.temperature = d.main.temp.toFixed(0);
         this.humidity = d.main.humidity.toFixed(0);
+        this.weather = d.weather;
       });
   }
 

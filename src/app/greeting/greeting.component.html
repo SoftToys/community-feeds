@@ -1,4 +1,4 @@
-<div *ngIf="idCard" class="bg-dark text-center text-white h-100 pt-1">
+<div *ngIf="idCard" class="main-container text-center text-white h-100 pt-1">
   <div class="greet-text h1">
     {{idCard.greeting}}
   </div>
@@ -13,11 +13,15 @@
   </div>
   <hr />
   <div class="current-weather-text">
-    <!-- <i class="fas fa-cloud-sun"></i> -->
+    <div>
+      <span class="weather-description">{{weather[0].description}}</span>
+      <img src="https://openweathermap.org/img/wn/{{weather[0].icon}}@2x.png" alt="" srcset="">
+    </div>
     <img src="assets/images/temperature.png" class="temperature-icon" alt="" srcset="">
     <span>{{temperature}}&deg;</span>/
     <i class="fas fa-tint"></i>
     <span>{{humidity}}%</span>
+
   </div>
   <hr />
   <div *ngIf="swellPeriod" class="current-weather-text">
