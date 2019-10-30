@@ -1,6 +1,9 @@
 <ng-container *ngIf="headlines">
   <div class="row feed-text text-right" dir="rtl">
-    <div class="col-2 article-time">[{{currentHeadline.publishedAtUtc | date:"HH:mm"}}]</div>
+
+    <div class="col-2 article-time">
+      <img [src]="currentHeadline.urlToImage" alt="" srcset=""
+        class="news-provider-logo">[{{currentHeadline.publishedAtUtc | date:"HH:mm"}}]</div>
     <div class="col-10 article-content">{{currentHeadline.title}}</div>
   </div>
 </ng-container>
