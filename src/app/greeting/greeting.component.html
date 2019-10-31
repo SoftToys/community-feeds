@@ -1,10 +1,12 @@
 <div *ngIf="idCard" class="main-container text-center text-white h-100 pt-1">
+  <div class="greet-text display-3">Welcome</div>
   <div class="greet-text h1">
     {{idCard.greeting}}
   </div>
   <hr />
   <div class="date-text">
-    <span>{{now | date:"EEEE, MMMM d"}}</span>
+    <!-- <span>{{now | date:"EEEE, MMMM d"}}</span> -->
+    <span>{{now | date:"dd/MM/yy"}}</span>
   </div>
   <div class="current-time feed-text clock-text">
     <img src="assets/images/clock2.png" class="clock-icon" alt="" srcset="">
