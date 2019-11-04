@@ -1,3 +1,13 @@
+export class IdCard {
+  greeting: string;
+  location: string;
+  weatherAppId: string;
+  magicSeaWeedKey: string;
+  magicSeaWeedSpot: number;
+  newsApiKey: string;
+  wavesSpot: string;
+}
+
 export interface Articles {
   status: string;
   totalResults: number;

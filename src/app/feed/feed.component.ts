@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Feed } from './feed';
-import { NgbSlideEvent } from '@ng-bootstrap/ng-bootstrap/carousel/carousel';
-import { HttpClient } from '@angular/common/http';
 import { interval } from 'rxjs';
 import * as moment from 'moment';
 import { DataService } from '../data.service';
@@ -20,7 +18,7 @@ export class FeedComponent implements OnInit {
   demo = false;
   changeSlideTO: NodeJS.Timer;
 
-  constructor(private http: HttpClient, private dataService: DataService) {
+  constructor(private dataService: DataService) {
 
   }
 
@@ -34,10 +32,6 @@ export class FeedComponent implements OnInit {
       this.subscribeInterval = refreshInterval.subscribe(() => {
         this.fetchFeeds();
       });
-      // const changeSlide = interval(10 * 1000);
-      // changeSlide.subscribe(() => {
-      //   this.nextSlide();
-      // });
     } else {
       this.demo = true;
       this.feeds = [window.history.state.demoFeed];
@@ -52,8 +46,7 @@ export class FeedComponent implements OnInit {
   }
   private fetchFeeds() {
     const now = moment();
-    const url = `https://communityfeeds.blob.core.windows.net/${this.feedFile}/feeds.json?v=${now.unix()}`;
-    this.http.get<Feed[]>(url).subscribe(feeds => {
+    this.dataService.getFeeds().subscribe(feeds => {
       this.feeds = feeds.filter((feed) => {
         return this.dataService.feedFilter(now, feed);
 
@@ -67,6 +60,7 @@ export class FeedComponent implements OnInit {
     });
   }
   nextSlide() {
+    clearTimeout(this.changeSlideTO);
     if (this.feeds && this.feeds.length > 0) {
       this.currentIndex = (this.currentIndex + 1) % this.feeds.length;
       this.currentFeed = this.feeds[this.currentIndex];

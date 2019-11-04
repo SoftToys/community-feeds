@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { IdCard } from './details';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { IdCard, Articles } from './models';
 import { HttpClient } from '@angular/common/http';
 import { Feed } from './feed/feed';
 import * as moment from 'moment';
@@ -11,6 +11,7 @@ import { ThrowStmt, TryCatchStmt } from '@angular/compiler';
   providedIn: 'root'
 })
 export class DataService {
+
   details: BehaviorSubject<IdCard>;
   tenantId: string;
   constructor(private http: HttpClient) {
@@ -26,6 +27,14 @@ export class DataService {
     window.localStorage.setItem('ten', this.tenantId);
     this.reload();
   }
+
+  public getTopNewsHeadlines(): Observable<Articles> {
+    const now = moment();
+    // const url = `https://newsapi.org/v2/top-headlines?sources=ynet&apiKey=${this.idCard.newsApiKey}&v=${now.unix()}`;
+    const url = `https://communityfeeds.blob.core.windows.net/data/top_headlines.json?v=${now.unix()}`;
+    return this.http.get<Articles>(url);
+  }
+
   public reload() {
     this.http.get<IdCard>(`https://communityfeeds.blob.core.windows.net/${this.tenantId}/idcard.json?v=${new Date().getTime()}`)
       .subscribe((d) => {
@@ -46,5 +55,48 @@ export class DataService {
         )
       );
     return isValid;
+  }
+  public getFeeds(): Observable<Feed[]> {
+    const now = moment();
+    const url = `https://communityfeeds.blob.core.windows.net/${this.tenantId}/feeds.json?v=${now.unix()}`;
+    return this.http.get<Feed[]>(url);
+  }
+  /**
+   * getWeather
+   */
+  public getWeather(): Observable<{ main: any, weather: any }> {
+
+    return this.http.get<{ main: any, weather: any }>(`https://api.openweathermap.org/data/2.5/weather?q=${this.details.value.location}&appid=${this.details.value.weatherAppId}&units=metric`);
+  }
+
+  public fetchWaveHeigth(callback: (waves: any[]) => void) {
+    const callbackFncName = `waves_${new Date().getTime()}`;
+    // tslint:disable-next-line:max-line-length
+    this.jsonp(`https://magicseaweed.com/api/${this.details.value.magicSeaWeedKey}/forecast/?spot_id=${this.details.value.magicSeaWeedSpot}&callback=${callbackFncName}`,
+      (d) => {
+        callback(d);
+      }, callbackFncName);
+  }
+  private jsonp(url: string, callback: (r: any) => any, callbackName: string) {
+    url = url || '';
+    const generatedFunction = callbackName;
+
+    window[generatedFunction] = (json) => {
+      callback(json);
+
+      try {
+        delete window[generatedFunction];
+      } catch (e) { }
+
+    };
+
+    if (url.indexOf('?') === -1) { url = url + '?'; } else { url = url + '&'; }
+    // 5 - //not using element.setAttribute()
+    const jsonpScript = document.createElement('script');
+    jsonpScript.src = url + 'callback=' + generatedFunction;
+    jsonpScript.type = 'text/javascript';
+    jsonpScript.className = 'cross';
+    jsonpScript.async = true;
+    document.getElementsByTagName('head')[0].appendChild(jsonpScript);
   }
 }

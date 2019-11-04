@@ -1,11 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Articles, ArticleEntity } from './articles';
 import { Observable, Subscription } from 'rxjs';
 import { interval } from 'rxjs';
 import * as moment from 'moment';
 import { DataService } from '../data.service';
-import { IdCard } from '../details';
+import { IdCard, ArticleEntity } from '../models';
 
 
 @Component({
@@ -21,7 +19,7 @@ export class NewsFeedComponent implements OnInit, OnDestroy {
   newsApiKey: string;
   idCard: IdCard;
 
-  constructor(private http: HttpClient, private dataService: DataService) {
+  constructor(private dataService: DataService) {
 
   }
 
@@ -45,15 +43,13 @@ export class NewsFeedComponent implements OnInit, OnDestroy {
     });
   }
   private fetchHeadlines() {
-    const now = moment();
-    // const url = `https://newsapi.org/v2/top-headlines?sources=ynet&apiKey=${this.idCard.newsApiKey}&v=${now.unix()}`;
-    const url = `https://communityfeeds.blob.core.windows.net/data/top_headlines.json?v=${now.unix()}`;
-    this.http.get<Articles>(url).subscribe(a => {
-      if (a.status === 'ok' && a.articles && a.articles.length > 0) {
-        this.headlines = a.articles;
-        this.currentHeadlineIndex = 0;
-      }
-    });
+    this.dataService.getTopNewsHeadlines()
+      .subscribe(a => {
+        if (a.status === 'ok' && a.articles && a.articles.length > 0) {
+          this.headlines = a.articles;
+          this.currentHeadlineIndex = 0;
+        }
+      });
   }
 
   ngOnDestroy(): void {

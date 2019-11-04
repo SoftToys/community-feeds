@@ -1,20 +1,19 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { interval } from 'rxjs';
-import { HttpClient, JsonpClientBackend } from '@angular/common/http';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { interval, Subscription } from 'rxjs';
 import { DataService } from '../data.service';
-import { IdCard } from '../details';
+import { IdCard } from '../models';
 
 @Component({
   selector: 'app-greeting',
   templateUrl: './greeting.component.html',
   styleUrls: ['./greeting.component.scss']
 })
-export class GreetingComponent implements OnInit {
+export class GreetingComponent implements OnInit, OnDestroy {
   now: Date;
-  subscribe: any;
+  subscribe: Subscription;
   temperature: number;
   humidity: number;
-  subscribeUpdateWeatherInterval: any;
+  subscribeUpdateWeatherInterval: Subscription;
   swellHeight: any;
   swellPeriod: any;
   idCard: IdCard;
@@ -22,14 +21,15 @@ export class GreetingComponent implements OnInit {
   wavesStars = 0;
   wavesMaxDummyStars = Array(5);
   weather: [{ icon: string, description: string, main: string }];
-  constructor(private http: HttpClient, private ref: ChangeDetectorRef, private dataService: DataService) {
+  constructor(private ref: ChangeDetectorRef, private dataService: DataService) {
     this.now = new Date();
     dataService.details.subscribe(details => {
 
       this.idCard = details;
       if (details.weatherAppId) {
-        const changeAtricle = interval(30 * 1000);
-        this.subscribe = changeAtricle.subscribe(val => {
+        const clockTrack = interval(30 * 1000);
+
+        this.subscribe = clockTrack.subscribe(val => {
           this.now = new Date();
         });
         const updateWeatherInterval = interval(1200 * 1000);
@@ -46,7 +46,7 @@ export class GreetingComponent implements OnInit {
 
   private fetchWeather() {
     // tslint:disable-next-line:max-line-length
-    this.http.get(`https://api.openweathermap.org/data/2.5/weather?q=${this.idCard.location}&appid=${this.idCard.weatherAppId}&units=metric`)
+    this.dataService.getWeather()
       .subscribe((d: any) => {
         this.temperature = d.main.temp.toFixed(0);
         this.humidity = d.main.humidity.toFixed(0);
@@ -56,41 +56,18 @@ export class GreetingComponent implements OnInit {
 
 
   private fetchWaveHeigth() {
-    const callback = `waves_${new Date().getTime()}`;
-    // tslint:disable-next-line:max-line-length
-    this.jsonp(`https://magicseaweed.com/api/${this.idCard.magicSeaWeedKey}/forecast/?spot_id=${this.idCard.magicSeaWeedSpot}&callback=${callback}`,
-      (d) => {
-        this.swellHeight = d[0].swell.components.combined.height;
-        this.swellPeriod = d[0].swell.components.combined.period;
-        this.wavesStars = Number(Math.round(d[0].solidRating));
-        this.ref.detectChanges();
-      }, callback);
+    this.dataService.fetchWaveHeigth((d) => {
+      this.swellHeight = d[0].swell.components.combined.height;
+      this.swellPeriod = d[0].swell.components.combined.period;
+      this.wavesStars = Number(Math.round(d[0].solidRating));
+      this.ref.detectChanges();
+    });
   }
 
-  public jsonp(url: string, callback: (r: any) => any, callbackName: string) {
-    url = url || '';
-    const generatedFunction = callbackName;
-
-    window[generatedFunction] = (json) => {
-      callback(json);
-
-      try {
-        delete window[generatedFunction];
-      } catch (e) { }
-
-    };
-
-    if (url.indexOf('?') === -1) { url = url + '?'; } else { url = url + '&'; }
-    // 5 - //not using element.setAttribute()
-    const jsonpScript = document.createElement('script');
-    jsonpScript.src = url + 'callback=' + generatedFunction;
-    jsonpScript.type = 'text/javascript';
-    jsonpScript.className = 'cross';
-    jsonpScript.async = true;
-    document.getElementsByTagName('head')[0].appendChild(jsonpScript);
-  }
-
-  ngOnInit() {
+  ngOnInit() { }
+  ngOnDestroy(): void {
+    this.subscribe.unsubscribe();
+    this.subscribeUpdateWeatherInterval.unsubscribe();
   }
 
 }

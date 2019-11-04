@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import { HttpClient } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EditFeedComponent } from '../edit-feed/edit-feed.component';
-import { IdCard } from 'src/app/details';
+import { IdCard } from 'src/app/models';
 import { DataService } from 'src/app/data.service';
 import { Router } from '@angular/router';
 import * as uuid from 'uuid';
@@ -66,15 +66,9 @@ export class FeedsListComponent implements OnInit {
     const url = `https://communityfeeds.blob.core.windows.net/${this.tenantId}/feeds.json?v=${now.unix()}`;
     this.http.get<Feed[]>(url).subscribe(feeds => {
       this.feeds = feeds;
-      // this.feeds.forEach(f => {
-      //   if (!f.id) {
-      //     f.id = uuid.v4();
-      //     this.containsChanges = true;
-      //   }
-      // });
       if (window.history.state.data) {
         this.feeds = this.feeds.filter(f => f.id !== window.history.state.data.id);
-        this.openNotification('You need to \'Publish\' your changes to take affect\nClick on Publish', 'publish');
+        this.openNotification(this.translate.instant(`You need to 'Publish' your changes to take affect\nClick on Publish`), 'publish');
         this.feeds.push(window.history.state.data);
         this.containsChanges = true;
       }
