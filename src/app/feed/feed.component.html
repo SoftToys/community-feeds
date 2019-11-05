@@ -2,7 +2,7 @@
     class="fa fa-arrow-left" aria-hidden="true"></i>
 </a>
 <div class="comp-container container h-100 p-1 over-hid">
-  <div class="h-100 over-hid" *ngIf="feeds">
+  <div class="h-100 over-hid" *ngIf="feeds && feeds.length">
     <div class="slide-container h-90" (click)="nextSlide()">
 
       <img [src]="getMainImage(currentFeed)" alt="Random first slide"
@@ -16,6 +16,10 @@
       <img *ngIf="currentFeed.subImgSource" class="sub-image" [src]="currentFeed.subImgSource" alt="Random first slide">
     </div>
 
+  </div>
+  <div class="display-1" *ngIf="(!feeds || !feeds.length) && adminError">
+    It is lonely here. go to <a [routerLink]="['/admin']" routerLinkActive="router-link-active">Admin</a> to add some
+    feeds
   </div>
 
   <!-- <div class="row">

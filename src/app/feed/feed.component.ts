@@ -17,6 +17,7 @@ export class FeedComponent implements OnInit {
   currentIndex = 0;
   demo = false;
   changeSlideTO: NodeJS.Timer;
+  adminError = false;
 
   constructor(private dataService: DataService) {
 
@@ -56,6 +57,8 @@ export class FeedComponent implements OnInit {
         this.currentFeed = this.feeds[0];
         if (this.changeSlideTO) { clearTimeout(this.changeSlideTO); }
         this.nextSlide();
+      } else {
+        this.adminError = true;
       }
     });
   }
