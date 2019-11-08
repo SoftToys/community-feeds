@@ -3,6 +3,8 @@ import { interval, Subscription } from 'rxjs';
 import { DataService } from '../data.service';
 import { IdCard } from '../models';
 
+
+const MS_IN_DAY = 24 * 60 * 60 * 1000;
 @Component({
   selector: 'app-greeting',
   templateUrl: './greeting.component.html',
@@ -21,6 +23,7 @@ export class GreetingComponent implements OnInit, OnDestroy {
   wavesStars = 0;
   wavesMaxDummyStars = Array(5);
   weather: [{ icon: string, description: string, main: string }];
+  nextSwellInDays: number;
   constructor(private ref: ChangeDetectorRef, private dataService: DataService) {
     this.now = new Date();
     dataService.details.subscribe(details => {
@@ -57,9 +60,24 @@ export class GreetingComponent implements OnInit, OnDestroy {
 
   private fetchWaveHeigth() {
     this.dataService.fetchWaveHeigth((d) => {
-      this.swellHeight = d[0].swell.components.combined.height;
-      this.swellPeriod = d[0].swell.components.combined.period;
-      this.wavesStars = Number(Math.round(d[0].solidRating));
+      const nextWavesForecastIndex = d.findIndex((w) => {
+        return w.localTimestamp > (new Date().getTime() / 1000);
+      });
+      const index = nextWavesForecastIndex >= 0 ? nextWavesForecastIndex : 0;
+      this.swellHeight = d[index].swell.components.combined.height;
+      this.swellPeriod = d[index].swell.components.combined.period;
+      this.wavesStars = Number(Math.round(d[index].solidRating));
+
+      const nextSwellAheadIndex = d.findIndex((w) => {
+        return w.localTimestamp > (new Date().getTime() / 1000) &&
+          w.solidRating > 0;
+      });
+
+      this.nextSwellInDays = -1;
+      if (nextSwellAheadIndex > -1) {
+        this.nextSwellInDays = Math.ceil(((d[nextSwellAheadIndex].localTimestamp * 1000) - new Date().getTime()) / MS_IN_DAY);
+      }
+
       this.ref.detectChanges();
     });
   }

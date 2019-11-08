@@ -33,6 +33,17 @@
       <img *ngFor="let star of wavesMaxDummyStars;let i = index" src="assets/images/star.png"
         [class.solid-star]="i < wavesStars" class="wave-star-icon" alt="">
     </div>
+    <div class="h4">
+      <small *ngIf="wavesStars == 0 && nextSwellInDays  == 0">
+        Swell later today
+      </small>
+      <small *ngIf="wavesStars == 0 && nextSwellInDays  == 1">
+        Swell tomorrow
+      </small>
+      <small *ngIf="wavesStars == 0 && nextSwellInDays > 0">
+        Swell in {{nextSwellInDays}}d
+      </small>
+    </div>
     <div class="waves-container">
       <img src="assets/images/wave.png" class="wave-icon" alt="" srcset="">
       <span>{{swellHeight}}m</span>/
