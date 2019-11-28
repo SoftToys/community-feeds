@@ -75,7 +75,7 @@ export class GreetingComponent implements OnInit, OnDestroy {
 
       this.nextSwellInDays = -1;
       if (nextSwellAheadIndex > -1) {
-        this.nextSwellInDays = Math.ceil(((d[nextSwellAheadIndex].localTimestamp * 1000) - new Date().getTime()) / MS_IN_DAY);
+        this.nextSwellInDays = Math.round(((d[nextSwellAheadIndex].localTimestamp * 1000) - new Date().getTime()) / MS_IN_DAY);
       }
 
       this.ref.detectChanges();
