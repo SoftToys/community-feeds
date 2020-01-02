@@ -35,7 +35,7 @@ export class GreetingComponent implements OnInit, OnDestroy {
         this.subscribe = clockTrack.subscribe(val => {
           this.now = new Date();
         });
-        const updateWeatherInterval = interval(1200 * 1000);
+        const updateWeatherInterval = interval(3600 * 1000);
         this.subscribeUpdateWeatherInterval = updateWeatherInterval.subscribe(val => {
           this.fetchWeather();
           this.fetchWaveHeigth();
