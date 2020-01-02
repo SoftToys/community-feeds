@@ -123,6 +123,7 @@ export class FeedsListComponent implements OnInit {
   public delete(feed: Feed) {
     const deleteFeed = confirm('Are you sure you want to delete?');
     if (deleteFeed) {
+      this.containsChanges = true;
       this.feeds = this.feeds.filter((v) => v !== feed);
     }
   }
