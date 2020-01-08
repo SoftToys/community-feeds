@@ -45,3 +45,4 @@ testem.log
 .DS_Store
 Thumbs.db
 src/idcard.json
+images/rpi_raspbian_chromium_autostart.img
