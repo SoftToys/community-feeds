@@ -1,4 +1,9 @@
 <div *ngIf="idCard" class="main-container text-center text-white h-100 pt-1">
+  <div *ngIf="showSnow && idCard.weatherEffects" class="snowflakes" aria-hidden="true">
+    <div class="snowflake" *ngFor="let number of [0,1,2,3,4,5,6]">
+    </div>
+  </div>
+
   <div class="greet-text display-3">Welcome</div>
   <div class="greet-text h1">
     {{idCard.greeting}}

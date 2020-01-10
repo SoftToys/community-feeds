@@ -6,6 +6,7 @@ export class IdCard {
   magicSeaWeedSpot: number;
   newsApiKey: string;
   wavesSpot: string;
+  weatherEffects: boolean;
 }
 
 export interface Articles {

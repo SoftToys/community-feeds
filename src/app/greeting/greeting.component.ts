@@ -24,6 +24,7 @@ export class GreetingComponent implements OnInit, OnDestroy {
   wavesMaxDummyStars = Array(5);
   weather: [{ icon: string, description: string, main: string }];
   nextSwellInDays: number;
+  showSnow: boolean;
   constructor(private ref: ChangeDetectorRef, private dataService: DataService) {
     this.now = new Date();
     dataService.details.subscribe(details => {
@@ -54,6 +55,7 @@ export class GreetingComponent implements OnInit, OnDestroy {
         this.temperature = d.main.temp.toFixed(0);
         this.humidity = d.main.humidity.toFixed(0);
         this.weather = d.weather;
+        this.showSnow = this.temperature < 15;
       });
   }
 
