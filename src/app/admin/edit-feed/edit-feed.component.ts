@@ -29,6 +29,10 @@ export class EditFeedComponent implements OnInit {
   ];
   imgTypes = [
     { id: 'Random', val: 'https://picsum.photos/900/700?random&t=2', customClass: '' },
+    { id: 'Random Happiness', val: 'https://source.unsplash.com/collection/209138/900x700', customClass: '' },
+    { id: 'Random Winter', val: 'https://source.unsplash.com/collection/3178572/900x700', customClass: '' },
+    { id: 'Random Planets', val: 'https://source.unsplash.com/collection/894/900x700', customClass: '' },
+    { id: 'Random mediterranean', val: 'https://source.unsplash.com/collection/8469893/900x700', customClass: '' },
     { id: 'Solid Black', val: 'https://dummyimage.com/900x700/000/000.png', customClass: '' },
     { id: 'Solid Grey', val: 'https://dummyimage.com/900x700/444/444.png', customClass: '' },
     { id: 'Solid White', val: 'https://dummyimage.com/900x700/fff/fff.png', customClass: '' },
