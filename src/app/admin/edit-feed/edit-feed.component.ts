@@ -32,6 +32,8 @@ export class EditFeedComponent implements OnInit {
     { id: 'Solid Black', val: 'https://dummyimage.com/900x700/000/000.png', customClass: '' },
     { id: 'Solid Grey', val: 'https://dummyimage.com/900x700/444/444.png', customClass: '' },
     { id: 'Solid White', val: 'https://dummyimage.com/900x700/fff/fff.png', customClass: '' },
+    { id: 'Solid Green', val: 'https://dummyimage.com/900x700/099142/099142.png', customClass: '' },
+    { id: 'Solid LightBlue', val: 'https://dummyimage.com/900x700/00b7ff/00b7ff.png', customClass: '' },
     { id: 'Art Picture', val: 'https://dummyimage.com/900x700/fff/fff.png', customClass: 'art-picture' },
     { id: 'Post it', val: 'https://dummyimage.com/900x700/fefe7e/fefe7e.png', customClass: 'post-it' },
     { id: 'Custom', val: '' },
