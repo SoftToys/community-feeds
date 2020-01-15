@@ -10,8 +10,9 @@
       <div class="main-caption text-center d-flex h100 over-hid" dir="rtl">
         <div class="main-text justify-content-center align-self-center">
           <h1 class="main-text"
-            [ngClass]="{'display-1': currentFeed.mainText.length < 10, 'display-2': currentFeed.mainText.length >= 10 && currentFeed.mainText.length < 20, 'display-3': currentFeed.mainText.length >= 20 && currentFeed.mainText.length <= 80, 'display-4':currentFeed.mainText.length > 80 }">
-            {{currentFeed.mainText}}</h1>
+            [ngClass]="{'display-1': currentFeed.mainText.length < 10, 'display-2': currentFeed.mainText.length >= 10 && currentFeed.mainText.length < 20, 'display-3': currentFeed.mainText.length >= 20 && currentFeed.mainText.length <= 80, 'display-4':currentFeed.mainText.length > 80 }"
+            [innerHTML]="currentFeed.mainText">
+          </h1>
           <h1 *ngIf="currentFeed.subText" class="main-text sub-text">{{currentFeed.subText}}</h1>
         </div>
       </div>
@@ -23,6 +24,7 @@
     It is lonely here. go to <a [routerLink]="['/admin']" routerLinkActive="router-link-active">Admin</a> to add some
     feeds
   </div>
+  <!-- <audio id="player" src="assets/sound/sound.mp3" preload="auto" muted loop autoplay></audio> -->
 
   <!-- <div class="row">
     <div class="col-8">
