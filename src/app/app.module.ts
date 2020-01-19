@@ -12,6 +12,7 @@ import { AdminModule } from './admin/admin.module';
 import { AppRoutingModule } from './app-routing,module';
 import { MainComponent } from './main/main.component';
 import { FormsModule } from '@angular/forms';
+import { SafeHtmlPipe } from './safe-html.pipe';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { FormsModule } from '@angular/forms';
     FeedComponent,
     NewsFeedComponent,
     GreetingComponent,
-    MainComponent
+    MainComponent,
+    SafeHtmlPipe
   ],
   imports: [
     FormsModule,
