@@ -7,6 +7,7 @@ export class IdCard {
   newsApiKey: string;
   wavesSpot: string;
   weatherEffects: boolean;
+  playSound: boolean;
 }
 
 export interface Articles {
