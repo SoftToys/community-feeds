@@ -13,8 +13,8 @@ debug: bool = sys.argv[2]
 
 """ number between 0 to 1 """
 desiredVolume: int = 0
-shouldPlay: bool = False
 currentVolume: int = 0
+fullFilePath: str = "~/assets/jazz.mp3"
 
 
 def isPlayingMusicActive() -> bool:
@@ -32,27 +32,29 @@ def isPlayingMusicActive() -> bool:
 
 
 def controlPlayer():
-        # monday is 0 and sunday is 6, friday 4, sat is 5
+    global desiredVolume
+    global currentVolume
+    # monday is 0 and sunday is 6, friday 4, sat is 5
     playingEnabled = isPlayingMusicActive()
     weekday = datetime.datetime.today().weekday()
     currentHour = datetime.datetime.now().hour
-    shouldPlay = playingEnabled and (
-        weekday < calendar.FRIDAY or weekday == calendar.SUNDAY)
-        or (weekday == calendar.FRIDAY and currentHour < 15)
-        or (weekday == calendar.SATURDAY and currentHour > 21)
+    shouldPlay = playingEnabled and (weekday < calendar.FRIDAY or weekday == calendar.SUNDAY) or (
+        weekday == calendar.FRIDAY and currentHour < 15) or (weekday == calendar.SATURDAY and currentHour > 21)
     desiredVolume = 100 if (currentHour > 8 and currentHour < 20) else 50
     processRunning = isProcessRunning()
+
     if processRunning and not shouldPlay:
         log(f"killing process.. [shouldPlay]: {shouldPlay}")
         killProcess()
         pass
     elif not processRunning and shouldPlay:
         log(f"Starting process.. [desiredVolume]: {desiredVolume}")
-        runProcess(desiredVolume, "jazz.mp3")
+        runProcess(desiredVolume, fullFilePath)
         pass
     if shouldPlay and desiredVolume != currentVolume:
         log(f"volumeSet [desiredVol]: {desiredVolume},[currentVol]: {currentVolume}")
-        adjustSound(desiredVolume)
+        adjustSound(desiredVolume, fullFilePath)
+        currentVolume = desiredVolume
         pass
 
 
@@ -83,19 +85,18 @@ def killProcess():
     pass
 
 
-def runProcess(volume: int, file: str):
+def runProcess(volume: int, fullFilePath: str):
     dbl = volumeToDbl(volume)
-    fullFilePath = f"~/assets/{file}"
-    log(f"running omxplayer with file {fileToPlay}..")
-    subprocess.Popen(["omxplayer", "--vol", str(dbl), "--no-osd", fileToPlay])
-    currentVolume = volume
+    log(f"running omxplayer with file {fullFilePath}..")
+    subprocess.Popen(
+        ["omxplayer", "--vol", str(dbl), "--no-osd", fullFilePath])
     pass
 
 
-def adjustSound(volume: int):
+def adjustSound(volume: int, fullFilePath: str):
     killProcess()
     time.sleep(5)
-    runProcess(volume)
+    runProcess(volume, fullFilePath)
     pass
 
 
