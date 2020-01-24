@@ -81,7 +81,7 @@ def isProcessRunning()-> bool:
 
 
 def killProcess():
-    subprocess.run(["pkill", "omxplayer"])
+    subprocess.Popen("pkill omxplayer", shell=True)
     pass
 
 
@@ -106,8 +106,5 @@ index = 0
 while True:
     controlPlayer()
     time.sleep(60)
-    index = index+1
-    if index > 2:
-        sys.exit(0)
     pass
 # threading.Timer(20, controlPlayer).start()  # every 2 minutes
