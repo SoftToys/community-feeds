@@ -38,8 +38,8 @@ def controlPlayer():
     playingEnabled = isPlayingMusicActive()
     weekday = datetime.datetime.today().weekday()
     currentHour = datetime.datetime.now().hour
-    shouldPlay = playingEnabled and (weekday < calendar.FRIDAY or weekday == calendar.SUNDAY) or (
-        weekday == calendar.FRIDAY and currentHour < 15) or (weekday == calendar.SATURDAY and currentHour > 21)
+    shouldPlay = playingEnabled and ((weekday < calendar.FRIDAY or weekday == calendar.SUNDAY) or (
+        weekday == calendar.FRIDAY and currentHour < 15) or (weekday == calendar.SATURDAY and currentHour > 21))
     desiredVolume = 100 if (currentHour > 8 and currentHour < 20) else 50
     processRunning = isProcessRunning()
 
@@ -87,9 +87,9 @@ def killProcess():
 
 def runProcess(volume: int, fullFilePath: str):
     dbl = volumeToDbl(volume)
-    log(f"running omxplayer with file {fullFilePath}..")
+    log(f"running omxplayer with file {fullFilePath} volume: {dbl}")
     subprocess.Popen(
-        ["omxplayer", "--vol", str(dbl), "--no-osd", fullFilePath])
+        f"omxplayer {fullFilePath} --vol {dbl} --no-osd --loop", shell=True)
     pass
 
 

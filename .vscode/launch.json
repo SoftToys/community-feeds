@@ -11,7 +11,8 @@
       "program": "${file}",
       "console": "integratedTerminal",
       "args": [
-        "ariklavi1"
+        "ariklavi1",
+        "True"
       ]
     }
   ]
