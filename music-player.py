@@ -17,7 +17,8 @@ class MusicPlayingProps:
 
 """ number between 0 to 1 """
 DESIRED_VOLUME_ENV_NAME: str = 'COMMUN_DESIRED_VOLUME'
-ASSETS_DIR: str = "~/assets"
+ASSETS_DIR: str = os.path.expanduser("~/assets")
+CURRENT_VOL_FILE_NAME = f"{ASSETS_DIR}/vol.txt"
 
 
 def isPlayingMusicActive(tenId: str) -> MusicPlayingProps:
@@ -46,10 +47,25 @@ def downloadFile(mediaFile: str):
     f.close()
 
 
+def setCurrentVol(vol: int):
+    f = open(CURRENT_VOL_FILE_NAME, "w")
+    f.write(str(vol))
+    f.close()
+
+
+def getCurrentVol():
+    if not os.path.exists(CURRENT_VOL_FILE_NAME):
+        return 0
+    f = open(CURRENT_VOL_FILE_NAME, "r")
+    content = f.read()
+    f.close()
+    return int(content)
+
+
 def controlPlayer(tenId: str):
 
     desiredVolume: int = 0
-    currentVolume: int = os.getenv(DESIRED_VOLUME_ENV_NAME, 0)
+    currentVolume: int = getCurrentVol()
     log(f"currentVolume is  {currentVolume}")
     # monday is 0 and sunday is 6, friday 4, sat is 5
     playingProps = isPlayingMusicActive(tenId)
@@ -80,7 +96,7 @@ def controlPlayer(tenId: str):
         adjustSound(desiredVolume, fullFilePath)
         currentVolume = desiredVolume
         pass
-    os.system(f"export {DESIRED_VOLUME_ENV_NAME}={str(currentVolume)}")
+    setCurrentVol(currentVolume)
 
 
 def volumeToDbl(volumePercentage: int):
