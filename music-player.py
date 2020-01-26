@@ -41,7 +41,9 @@ def downloadFile(mediaFile: str):
     r = requests.get(url, allow_redirects=True)
     if not os.path.exists(ASSETS_DIR):
         os.mkdir(ASSETS_DIR)
-    open(f"{ASSETS_DIR}/{mediaFile}", 'wb').write(r.content)
+    f = open(f"{ASSETS_DIR}/{mediaFile}", 'wb')
+    f.write(r.content)
+    f.close()
 
 
 def controlPlayer(tenId: str):
@@ -72,14 +74,13 @@ def controlPlayer(tenId: str):
         log(f"Starting process.. [desiredVolume]: {desiredVolume}")
         runProcess(desiredVolume, fullFilePath)
         currentVolume = desiredVolume
-        os.environ[DESIRED_VOLUME_ENV_NAME] = str(currentVolume)
         pass
     if shouldPlay and desiredVolume != currentVolume:
         log(f"volumeSet [desiredVol]: {desiredVolume},[currentVol]: {currentVolume}")
         adjustSound(desiredVolume, fullFilePath)
         currentVolume = desiredVolume
-        os.environ[DESIRED_VOLUME_ENV_NAME] = str(currentVolume)
         pass
+    os.system(f"export {DESIRED_VOLUME_ENV_NAME}={str(currentVolume)}")
 
 
 def volumeToDbl(volumePercentage: int):
