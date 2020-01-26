@@ -17,7 +17,7 @@ class MusicPlayingProps:
 
 """ number between 0 to 1 """
 DESIRED_VOLUME_ENV_NAME: str = 'COMMUN_DESIRED_VOLUME'
-ASSETS_DIR: str = "./assets"
+ASSETS_DIR: str = "~/assets"
 
 
 def isPlayingMusicActive(tenId: str) -> MusicPlayingProps:
@@ -37,6 +37,7 @@ def isPlayingMusicActive(tenId: str) -> MusicPlayingProps:
 
 def downloadFile(mediaFile: str):
     url = f'https://communityfeeds.blob.core.windows.net/assets/{mediaFile}'
+    log(f"downloading file.. {url}")
     r = requests.get(url, allow_redirects=True)
     if not os.path.exists(ASSETS_DIR):
         os.mkdir(ASSETS_DIR)
