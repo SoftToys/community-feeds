@@ -165,8 +165,24 @@ export class FeedsListComponent implements OnInit {
               this.errorMsg = err.statusText || 'unable to save resources.. try again';
             }
           });
-
     }
+  }
+
+  public toggleMusic() {
+    this.card.playSound = !this.card.playSound;
+    this.loading = true;
+    this.errorMsg = '';
+    this.http.post(`https://feeds-admin.azurewebsites.net/api/update-card?tenantId=${this.tenantId}&code=${this.code}`,
+      this.card).subscribe(
+        (i) => {
+          this.loading = false;
+        },
+        (err) => {
+          this.loading = false;
+          if (err.statusText !== 'OK') {
+            this.errorMsg = err.statusText || 'unable to save resources.. try again';
+          }
+        });
   }
   public isShown(feed: Feed) {
     const now = moment();

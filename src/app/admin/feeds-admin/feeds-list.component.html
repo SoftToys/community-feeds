@@ -47,6 +47,9 @@
       <button class="btn btn-primary btn-sm" [disabled]="loading" (click)="open()" translate>+ Add</button>
       <button class="btn btn-danger btn-sm" (click)="publish()" [disabled]="!containsChanges || loading"
         translate>Publish</button>
+      <button *ngIf="card.soundFeatureEnabled" [disabled]="loading" class="btn btn-danger btn-sm"
+        (click)="toggleMusic()" translate>{{card.playSound ? "Stop Music" : "Play Music"}} <i
+          class="fas fa-music"></i></button>
     </div>
     <div *ngIf="feeds">
       <div class="row table-header-row">
