@@ -8,40 +8,60 @@ import subprocess
 import psutil
 import calendar
 
-tenantId: str = sys.argv[1]
-debug: bool = sys.argv[2]
+
+class MusicPlayingProps:
+    def __init__(self, playSoundEnabled, mediaFiles):
+        self.playSoundEnabled: bool = playSoundEnabled
+        self.mediaFiles: list = mediaFiles
+
 
 """ number between 0 to 1 """
-desiredVolume: int = 0
-currentVolume: int = 0
-fullFilePath: str = "~/assets/jazz.mp3"
+DESIRED_VOLUME_ENV_NAME: str = 'COMMUN_DESIRED_VOLUME'
+ASSETS_DIR: str = "./assets"
 
 
-def isPlayingMusicActive() -> bool:
+def isPlayingMusicActive(tenId: str) -> MusicPlayingProps:
     if not tenantId:
         return False
     ts = time.time()
-    URL = f"https://communityfeeds.blob.core.windows.net/{tenantId}/idcard.json?v={ts}"
+    URL = f"https://communityfeeds.blob.core.windows.net/{tenId}/idcard.json?v={ts}"
     # sending get request and saving the response as response object
     r = requests.get(url=URL)
 
     # extracting data in json format
     data: dict = r.json()
-    playSound: bool = data['playSound']
-    return playSound
+    playSound: bool = data.get('playSound', False)
+    files: list = data.get('files', ["jazz.mp3"])
+    return MusicPlayingProps(playSound, files)
 
 
-def controlPlayer():
-    global desiredVolume
-    global currentVolume
+def downloadFile(mediaFile: str):
+    url = f'https://communityfeeds.blob.core.windows.net/assets/{mediaFile}'
+    r = requests.get(url, allow_redirects=True)
+    if not os.path.exists(ASSETS_DIR):
+        os.mkdir(ASSETS_DIR)
+    open(f"{ASSETS_DIR}/{mediaFile}", 'wb').write(r.content)
+
+
+def controlPlayer(tenId: str):
+
+    desiredVolume: int = 0
+    currentVolume: int = os.getenv(DESIRED_VOLUME_ENV_NAME, 0)
+    log(f"currentVolume is  {currentVolume}")
     # monday is 0 and sunday is 6, friday 4, sat is 5
-    playingEnabled = isPlayingMusicActive()
+    playingProps = isPlayingMusicActive(tenId)
+    playingEnabled = playingProps.playSoundEnabled
+
     weekday = datetime.datetime.today().weekday()
     currentHour = datetime.datetime.now().hour
     shouldPlay = playingEnabled and ((weekday < calendar.FRIDAY or weekday == calendar.SUNDAY) or (
         weekday == calendar.FRIDAY and currentHour < 15) or (weekday == calendar.SATURDAY and currentHour > 21))
     desiredVolume = 100 if (currentHour > 8 and currentHour < 20) else 50
     processRunning = isProcessRunning()
+
+    fullFilePath: str = f"{ASSETS_DIR}/{str(playingProps.mediaFiles[0])}"
+    if shouldPlay and not os.path.exists(fullFilePath):
+        downloadFile(playingProps.mediaFiles[0])
 
     if processRunning and not shouldPlay:
         log(f"killing process.. [shouldPlay]: {shouldPlay}")
@@ -50,11 +70,14 @@ def controlPlayer():
     elif not processRunning and shouldPlay:
         log(f"Starting process.. [desiredVolume]: {desiredVolume}")
         runProcess(desiredVolume, fullFilePath)
+        currentVolume = desiredVolume
+        os.environ[DESIRED_VOLUME_ENV_NAME] = str(currentVolume)
         pass
     if shouldPlay and desiredVolume != currentVolume:
         log(f"volumeSet [desiredVol]: {desiredVolume},[currentVol]: {currentVolume}")
         adjustSound(desiredVolume, fullFilePath)
         currentVolume = desiredVolume
+        os.environ[DESIRED_VOLUME_ENV_NAME] = str(currentVolume)
         pass
 
 
@@ -100,11 +123,16 @@ def adjustSound(volume: int, fullFilePath: str):
     pass
 
 
-# https://config9.com/linux/adjust-audio-volume-level-with-cli-omxplayer-raspberry-pi/ solution 5
-# api-endpoint
-index = 0
-while True:
-    controlPlayer()
-    time.sleep(60)
-    pass
-# threading.Timer(20, controlPlayer).start()  # every 2 minutes
+tenantId: str = sys.argv[1]
+debug: bool = sys.argv[2]
+
+controlPlayer(tenantId)
+
+# # https://config9.com/linux/adjust-audio-volume-level-with-cli-omxplayer-raspberry-pi/ solution 5
+# # api-endpoint
+# index = 0
+# while True:
+#     controlPlayer()
+#     time.sleep(60)
+#     pass
+# # threading.Timer(20, controlPlayer).start()  # every 2 minutes
