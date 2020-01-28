@@ -10,9 +10,10 @@ import calendar
 
 
 class MusicPlayingProps:
-    def __init__(self, playSoundEnabled, mediaFiles):
+    def __init__(self, playSoundEnabled, mediaFiles, mutedDates):
         self.playSoundEnabled: bool = playSoundEnabled
         self.mediaFiles: list = mediaFiles
+        self.mutedDates = mutedDates
 
 
 """ number between 0 to 1 """
@@ -33,7 +34,8 @@ def isPlayingMusicActive(tenId: str) -> MusicPlayingProps:
     data: dict = r.json()
     playSound: bool = data.get('playSound', False)
     files: list = data.get('files', ["jazz.mp3"])
-    return MusicPlayingProps(playSound, files)
+    mutedDates: list = data.get('muteDates', ["2020-01-26", "2020-01-27"])
+    return MusicPlayingProps(playSound, files, mutedDates)
 
 
 def downloadFile(mediaFile: str):
@@ -72,9 +74,11 @@ def controlPlayer(tenId: str):
     playingEnabled = playingProps.playSoundEnabled
 
     weekday = datetime.datetime.today().weekday()
+    todayDate = datetime.datetime.today().strftime("%Y-%m-%d")
     currentHour = datetime.datetime.now().hour
     shouldPlay = playingEnabled and ((weekday < calendar.FRIDAY or weekday == calendar.SUNDAY) or (
-        weekday == calendar.FRIDAY and currentHour < 15) or (weekday == calendar.SATURDAY and currentHour > 21))
+        weekday == calendar.FRIDAY and currentHour < 15) or (weekday == calendar.SATURDAY and currentHour > 21)) and (
+        todayDate not in playingProps.mutedDates)
     desiredVolume = 100 if (currentHour > 8 and currentHour < 20) else 50
     processRunning = isProcessRunning()
 
@@ -117,7 +121,7 @@ def log(msg: str):
         print(f"{current_time}\t{msg}")
 
 
-def isProcessRunning()-> bool:
+def isProcessRunning() -> bool:
     return "omxplayer" in (p.name() for p in psutil.process_iter())
 
 

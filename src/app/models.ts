@@ -8,6 +8,7 @@ export class IdCard {
   wavesSpot: string;
   weatherEffects: boolean;
   playSound: boolean;
+  soundFeatureEnabled: boolean;
 }
 
 export interface Articles {
