@@ -67,11 +67,18 @@ export class FeedsListComponent implements OnInit {
     this.http.get<Feed[]>(url).subscribe(feeds => {
       this.feeds = feeds;
       if (window.history.state.data) {
-        this.feeds = this.feeds.filter(f => f.id !== window.history.state.data.id);
-        this.openNotification(this.translate.instant(`You need to 'Publish' your changes to take affect\nClick on Publish`), 'publish');
-        this.feeds.push(window.history.state.data);
+        if (this.feeds.findIndex(f => f.id === window.history.state.data.id) >= 0) {
+          // updating existing..
+          this.feeds = this.feeds.filter(f => f.id !== window.history.state.data.id);
+          this.feeds.push(window.history.state.data);
+        }
+        this.dataService.tryAddUpdateNonPublishedFeed(window.history.state.data as Feed);
         this.containsChanges = true;
+        this.openNotification(this.translate.instant(`You need to 'Publish' your changes to take affect\nClick on Publish`), 'publish');
+        delete window.history.state.data;
       }
+      const nonPublishedFeeds = this.dataService.nonPublishedFeeds;
+      this.feeds = [...this.feeds, ...nonPublishedFeeds];
       this.loading = false;
     },
       (err: any) => {
@@ -80,6 +87,7 @@ export class FeedsListComponent implements OnInit {
       },
     );
   }
+
 
   public fetchIdCard() {
     if (!this.tenantId) {
@@ -125,6 +133,7 @@ export class FeedsListComponent implements OnInit {
     if (deleteFeed) {
       this.containsChanges = true;
       this.feeds = this.feeds.filter((v) => v !== feed);
+      this.dataService.tryRemoveNonPublishedFeed(feed.id);
     }
   }
 
@@ -154,10 +163,11 @@ export class FeedsListComponent implements OnInit {
     if (publish) {
       this.loading = true;
       this.http.post(`https://feeds-admin.azurewebsites.net/api/HttpTrigger1?tenantId=${this.tenantId}&code=${this.code}`,
-        this.feeds).subscribe(
+        this.feeds, { responseType: 'text' }).subscribe(
           (i) => {
             this.loading = false;
             this.containsChanges = false;
+            this.dataService.clearNonPublishedFeeds();
           },
           (err) => {
             this.loading = false;
@@ -188,20 +198,4 @@ export class FeedsListComponent implements OnInit {
     const now = moment();
     return this.dataService.feedFilter(now, feed);
   }
-  // public createNew(content) {
-  //   this.currentlyEditing = { isActive: true };
-  //   this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-  //     this.feeds.push(result);
-  //   }, (reason) => {
-  //     this.closeResult = `Dismissed`;
-  //   });
-  // }
-
-  // public edit(content, feed: Feed) {
-  //   this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-  //     this.closeResult = `Closed with: ${result}`;
-  //   }, (reason) => {
-  //     this.closeResult = `Dismissed`;
-  //   });
-  // }
 }

@@ -12,6 +12,7 @@ import { ThrowStmt, TryCatchStmt } from '@angular/compiler';
 })
 export class DataService {
 
+  nonPublishedFeeds: Feed[] = [];
   details: BehaviorSubject<IdCard>;
   tenantId: string;
   constructor(private http: HttpClient) {
@@ -47,13 +48,17 @@ export class DataService {
       (!feed.validFromDate || moment(feed.validFromDate, 'DD/MM/YYYY') < nowTime) &&
       (!feed.validToDate || moment(feed.validToDate, 'DD/MM/YYYY') > nowTime) &&
       (feed.isActive !== false) &&
-      ((!feed.day || feed.day.length === 0) ||
+      (
+        (!feed.day || feed.day.length === 0) ||
         (
           feed.day.map(d => d.id).includes(nowTime.weekday()) &&
-          (feed.day[0].id !== nowTime.weekday() || !feed.fromHour || nowTime.hour() > feed.fromHour) &&
+          (feed.day[0].id !== nowTime.weekday() || !feed.fromHour || nowTime.hour() >= feed.fromHour) &&
           (feed.day[feed.day.length - 1].id !== nowTime.weekday() || !feed.tillHour || nowTime.hour() < feed.tillHour)
         )
-      );
+      ) &&
+      (!feed.fromHour || nowTime.hour() >= feed.fromHour) &&
+      (!feed.tillHour || nowTime.hour() < feed.tillHour)
+      ;
     return isValid;
   }
   public getFeeds(): Observable<Feed[]> {
@@ -98,5 +103,20 @@ export class DataService {
     jsonpScript.className = 'cross';
     jsonpScript.async = true;
     document.getElementsByTagName('head')[0].appendChild(jsonpScript);
+  }
+  private addNonPublishedFeed(feed: Feed): Feed[] {
+    this.nonPublishedFeeds.push(feed);
+    return this.nonPublishedFeeds;
+  }
+  clearNonPublishedFeeds() {
+    this.nonPublishedFeeds = [];
+  }
+  tryRemoveNonPublishedFeed(id: any) {
+    this.nonPublishedFeeds = this.nonPublishedFeeds.filter((v) => v.id !== id);
+  }
+  tryAddUpdateNonPublishedFeed(f: Feed) {
+    this.tryRemoveNonPublishedFeed(f.id);
+    this.addNonPublishedFeed(f);
+    return this.nonPublishedFeeds;
   }
 }
