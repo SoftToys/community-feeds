@@ -44,22 +44,25 @@ export class DataService {
   }
 
   public feedFilter(nowTime: moment.Moment, feed: Feed): boolean {
-    const isValid =
-      (!feed.validFromDate || moment(feed.validFromDate, 'DD/MM/YYYY') < nowTime) &&
-      (!feed.validToDate || moment(feed.validToDate, 'DD/MM/YYYY') > nowTime) &&
-      (feed.isActive !== false) &&
+
+    const validDates = (!feed.validFromDate || moment(feed.validFromDate, 'DD/MM/YYYY') < nowTime) &&
+      (!feed.validToDate || moment(feed.validToDate, 'DD/MM/YYYY') > nowTime);
+
+    const hasDaysFilter = feed.day && feed.day.length > 0;
+    const isMatchDays =
+      !hasDaysFilter ||
       (
-        (!feed.day || feed.day.length === 0) ||
-        (
-          feed.day.map(d => d.id).includes(nowTime.weekday()) &&
-          (feed.day[0].id !== nowTime.weekday() || !feed.fromHour || nowTime.hour() >= feed.fromHour) &&
-          (feed.day[feed.day.length - 1].id !== nowTime.weekday() || !feed.tillHour || nowTime.hour() < feed.tillHour)
-        )
-      ) &&
+        feed.day.map(d => d.id).includes(nowTime.weekday()) &&
+        (feed.day[0].id !== nowTime.weekday() || !feed.fromHour || nowTime.hour() >= feed.fromHour) &&
+        (feed.day[feed.day.length - 1].id !== nowTime.weekday() || !feed.tillHour || nowTime.hour() < feed.tillHour)
+      );
+
+    const validHours = hasDaysFilter || (
       (!feed.fromHour || nowTime.hour() >= feed.fromHour) &&
       (!feed.tillHour || nowTime.hour() < feed.tillHour)
-      ;
-    return isValid;
+    );
+
+    return feed.isActive && validDates && isMatchDays && validHours;
   }
   public getFeeds(): Observable<Feed[]> {
     const now = moment();

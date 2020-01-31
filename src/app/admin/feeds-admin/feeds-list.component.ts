@@ -70,14 +70,15 @@ export class FeedsListComponent implements OnInit {
         if (this.feeds.findIndex(f => f.id === window.history.state.data.id) >= 0) {
           // updating existing..
           this.feeds = this.feeds.filter(f => f.id !== window.history.state.data.id);
-          this.feeds.push(window.history.state.data);
+          // this.feeds.push(window.history.state.data);
         }
         this.dataService.tryAddUpdateNonPublishedFeed(window.history.state.data as Feed);
-        this.containsChanges = true;
         this.openNotification(this.translate.instant(`You need to 'Publish' your changes to take affect\nClick on Publish`), 'publish');
         delete window.history.state.data;
       }
       const nonPublishedFeeds = this.dataService.nonPublishedFeeds;
+      this.containsChanges = nonPublishedFeeds && nonPublishedFeeds.length > 0;
+      this.feeds = this.feeds.filter(f => nonPublishedFeeds.findIndex(npf => npf.id === f.id) < 0);
       this.feeds = [...this.feeds, ...nonPublishedFeeds];
       this.loading = false;
     },
