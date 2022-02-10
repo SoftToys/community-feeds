@@ -56,6 +56,7 @@ def downloadFileChuncked(mediaFile: str):
     # NOTE the stream=True parameter below
     if not os.path.exists(ASSETS_DIR):
         os.mkdir(ASSETS_DIR)
+    chunkNumber = 0
     with requests.get(url, stream=True) as r:
         r.raise_for_status()
         with open(f"{ASSETS_DIR}/{mediaFile}", 'wb') as f:
@@ -63,7 +64,9 @@ def downloadFileChuncked(mediaFile: str):
                 # If you have chunk encoded response uncomment if
                 # and set chunk_size parameter to None.
                 # if chunk:
-                f.write(chunk)    
+                chunkNumber = chunkNumber + 1
+                log(f"Downloaded chunk {chunkNumber} for {mediaFile}..")
+                f.write(chunk)
 
 
 def setCurrentVol(vol: int):
