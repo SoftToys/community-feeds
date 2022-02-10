@@ -51,6 +51,21 @@ def downloadFile(mediaFile: str):
     f.close()
 
 
+def downloadFileChuncked(mediaFile: str):
+    url = f'https://communityfeeds.blob.core.windows.net/assets/{mediaFile}'
+    # NOTE the stream=True parameter below
+    if not os.path.exists(ASSETS_DIR):
+        os.mkdir(ASSETS_DIR)
+    with requests.get(url, stream=True) as r:
+        r.raise_for_status()
+        with open(f"{ASSETS_DIR}/{mediaFile}", 'wb') as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                # If you have chunk encoded response uncomment if
+                # and set chunk_size parameter to None.
+                # if chunk:
+                f.write(chunk)    
+
+
 def setCurrentVol(vol: int):
     f = open(CURRENT_VOL_FILE_NAME, "w")
     f.write(str(vol))
@@ -90,7 +105,7 @@ def controlPlayer(tenId: str):
         fullFilePath: str = f"{ASSETS_DIR}/{str(mediaFileName)}"
         if shouldPlay and not os.path.exists(fullFilePath):
             try:
-                downloadFile(mediaFileName)
+                downloadFileChuncked(mediaFileName)
                 availableMediaFiles.append(mediaFileName)
             except:
                 print(f'Could not download {mediaFileName}')
