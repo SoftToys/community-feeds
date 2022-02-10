@@ -35,7 +35,7 @@ def isPlayingMusicActive(tenId: str) -> MusicPlayingProps:
     data: dict = r.json()
     playSound: bool = data.get('playSound', False)
     files: list = data.get(
-        'files', ["piano1h.mp3", "french-jazz.mp3", "nature3h.mp3" "piano3h.mp3"])
+        'files', ["piano1h.mp3", "french-jazz.mp3", "nature3h.mp3", "piano3h.mp3"])
     mutedDates: list = data.get('muteDates', ["2020-01-26", "2020-01-27"])
     return MusicPlayingProps(playSound, files, mutedDates)
 
@@ -67,6 +67,7 @@ def downloadFileChuncked(mediaFile: str):
                 chunkNumber = chunkNumber + 1
                 log(f"Downloaded chunk {chunkNumber} for {mediaFile}..")
                 f.write(chunk)
+            log(f"Downloaded file {mediaFile}")
 
 
 def setCurrentVol(vol: int):
