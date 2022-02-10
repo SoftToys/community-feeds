@@ -7,6 +7,7 @@ import datetime
 import subprocess
 import psutil
 import calendar
+import random
 
 
 class MusicPlayingProps:
@@ -33,7 +34,8 @@ def isPlayingMusicActive(tenId: str) -> MusicPlayingProps:
     # extracting data in json format
     data: dict = r.json()
     playSound: bool = data.get('playSound', False)
-    files: list = data.get('files', ["jazz.mp3"])
+    files: list = data.get(
+        'files', ["piano1h.mp3", "french-jazz.mp3", "piano3h.mp3"])
     mutedDates: list = data.get('muteDates', ["2020-01-26", "2020-01-27"])
     return MusicPlayingProps(playSound, files, mutedDates)
 
@@ -82,9 +84,21 @@ def controlPlayer(tenId: str):
     desiredVolume = 100 if (currentHour > 8 and currentHour < 20) else 50
     processRunning = isProcessRunning()
 
-    fullFilePath: str = f"{ASSETS_DIR}/{str(playingProps.mediaFiles[0])}"
-    if shouldPlay and not os.path.exists(fullFilePath):
-        downloadFile(playingProps.mediaFiles[0])
+    availableMediaFiles: list = []
+
+    for mediaFileName in playingProps.mediaFiles:
+        fullFilePath: str = f"{ASSETS_DIR}/{str(mediaFileName)}"
+        if shouldPlay and not os.path.exists(fullFilePath):
+            try:
+                downloadFile(mediaFileName)
+                availableMediaFiles.append(mediaFileName)
+            except:
+                print(f'Could not download {mediaFileName}')
+        else:
+            availableMediaFiles.append(mediaFileName)
+
+    randomMediaFileName = random.choice(availableMediaFiles)
+    fullFilePath: str = f"{ASSETS_DIR}/{str(randomMediaFileName)}"
 
     if processRunning and not shouldPlay:
         log(f"killing process.. [shouldPlay]: {shouldPlay}")
