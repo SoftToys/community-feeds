@@ -8,6 +8,17 @@ import subprocess
 import psutil
 import calendar
 import random
+import logging
+
+
+Log_Format = "%(levelname)s %(asctime)s - %(message)s"
+
+logging.basicConfig(filename="logfile.log",
+                    filemode="w",
+                    format=Log_Format,
+                    level=logging.ERROR)
+
+logger = logging.getLogger()
 
 
 class MusicPlayingProps:
@@ -118,7 +129,7 @@ def controlPlayer(tenId: str):
 
     randomMediaFileName = random.choice(availableMediaFiles)
     fullFilePath: str = f"{ASSETS_DIR}/{str(randomMediaFileName)}"
-
+    log(f"shouldPlay :{shouldPlay}, processRunning: {processRunning}, volumeSet [desiredVol]: {desiredVolume},[currentVol]: {currentVolume}")
     if processRunning and not shouldPlay:
         log(f"killing process.. [shouldPlay]: {shouldPlay}")
         killProcess()
@@ -133,6 +144,8 @@ def controlPlayer(tenId: str):
         adjustSound(desiredVolume, fullFilePath)
         currentVolume = desiredVolume
         pass
+    else:
+      log(f"DO NOTHING volumeSet [desiredVol]: {desiredVolume},[currentVol]: {currentVolume}")
     setCurrentVol(currentVolume)
 
 
@@ -152,6 +165,7 @@ def log(msg: str):
     current_time = now. strftime("%H:%M:%S")
     if debug:
         print(f"{current_time}\t{msg}")
+    logger.log(1, msg)
 
 
 def isProcessRunning() -> bool:
