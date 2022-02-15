@@ -8,17 +8,6 @@ import subprocess
 import psutil
 import calendar
 import random
-import logging
-
-
-Log_Format = "%(levelname)s %(asctime)s - %(message)s"
-
-logging.basicConfig(filename="logfile.log",
-                    filemode="w",
-                    format=Log_Format,
-                    level=logging.ERROR)
-
-logger = logging.getLogger()
 
 
 class MusicPlayingProps:
@@ -129,7 +118,8 @@ def controlPlayer(tenId: str):
 
     randomMediaFileName = random.choice(availableMediaFiles)
     fullFilePath: str = f"{ASSETS_DIR}/{str(randomMediaFileName)}"
-    log(f"shouldPlay :{shouldPlay}, processRunning: {processRunning}, volumeSet [desiredVol]: {desiredVolume},[currentVol]: {currentVolume}")
+    log(
+        f"shouldPlay :{shouldPlay}, processRunning: {processRunning}, volumeSet [desiredVol]: {desiredVolume},[currentVol]: {currentVolume}")
     if processRunning and not shouldPlay:
         log(f"killing process.. [shouldPlay]: {shouldPlay}")
         killProcess()
@@ -145,7 +135,8 @@ def controlPlayer(tenId: str):
         currentVolume = desiredVolume
         pass
     else:
-      log(f"DO NOTHING volumeSet [desiredVol]: {desiredVolume},[currentVol]: {currentVolume}")
+        log(
+            f"No need to adjust volume ,volumeSet [desiredVol]: {desiredVolume},[currentVol]: {currentVolume}")
     setCurrentVol(currentVolume)
 
 
@@ -165,7 +156,6 @@ def log(msg: str):
     current_time = now. strftime("%H:%M:%S")
     if debug:
         print(f"{current_time}\t{msg}")
-    logger.log(1, msg)
 
 
 def isProcessRunning() -> bool:
@@ -194,7 +184,7 @@ def adjustSound(volume: int, fullFilePath: str):
 
 tenantId: str = sys.argv[1]
 debug: bool = sys.argv[2]
-
+log(f"Starting.. with tenantId: {tenantId} debug: {debug}")
 controlPlayer(tenantId)
 
 # # https://config9.com/linux/adjust-audio-volume-level-with-cli-omxplayer-raspberry-pi/ solution 5
