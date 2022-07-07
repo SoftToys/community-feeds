@@ -23,7 +23,7 @@
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
     "core-js": "^2.5.4",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "ng-multiselect-dropdown": "^0.2.4",
     "ngx-bootstrap-multiselect-dropdown": "^1.0.5",
     "node-sass": "^4.12.0",
