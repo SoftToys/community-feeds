@@ -18,8 +18,8 @@ def hasConnection(tenId: str) -> bool:
         return False
 
 
-NUMBER_OF_RETRIES = 10
-SLEEP_BETWEEN_RETRIES_SEC = 3
+NUMBER_OF_RETRIES = 8
+SLEEP_BETWEEN_RETRIES_SEC = 20
 
 
 def checkConnection(tenId: str) -> bool:
