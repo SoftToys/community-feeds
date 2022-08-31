@@ -10,6 +10,9 @@ import calendar
 import random
 import pygame
 
+ASSETS_DIR: str = os.path.expanduser("~/assets")
+#ASSETS_DIR: str = os.path.expanduser(".")
+ENGINE_INTERVAL_SECONDS = 30
 
 class MusicPlayingProps:
     # def __init__(self, json_def):
@@ -18,12 +21,6 @@ class MusicPlayingProps:
         self.playSoundEnabled: bool = playSoundEnabled
         self.mediaFiles: list = mediaFiles
         self.mutedDates = mutedDates
-
-
-""" number between 0 to 1 """
-#ASSETS_DIR: str = os.path.expanduser("~/assets")
-ASSETS_DIR: str = os.path.expanduser(".")
-
 
 def getMusicPlayingProps(tenId: str) -> MusicPlayingProps:
     if not tenantId:
@@ -81,6 +78,8 @@ def downloadMediaFiles(mediaFiles: list) -> list:
         else:
             availableMediaFiles.append(mediaFileName)
 
+    return availableMediaFiles        
+
 
 def controlPlayer(tenId: str):
 
@@ -127,9 +126,8 @@ def controlPlayer(tenId: str):
         except Exception as e:
             log(f"Error occured! {e}")
         finally:
-            sleeptimeSeconds = 10
-            time.sleep(sleeptimeSeconds)
-            log(f"Sleeping for {sleeptimeSeconds}..")
+            time.sleep(ENGINE_INTERVAL_SECONDS)
+            log(f"Sleeping for {ENGINE_INTERVAL_SECONDS}..")
 
 
 def log(msg: str):
