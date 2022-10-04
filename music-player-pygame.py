@@ -110,8 +110,7 @@ def controlPlayer(tenId: str):
                 playingProps.mediaFiles)
 
             isPlaying = pygame.mixer.music.get_busy()
-            pygame.mixer.music.set_volume(desiredVolume)
-            shouldPlay = True
+            pygame.mixer.music.set_volume(desiredVolume)            
             log(1, f"Isplaying {isPlaying}  desiredVolume {desiredVolume} shouldPlay {shouldPlay}")
 
             if not shouldPlay and isPlaying:
