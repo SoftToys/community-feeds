@@ -14,10 +14,11 @@ import pygame
 class MusicPlayingProps:
     # def __init__(self, json_def):
     #     self.__dict__ = json.loads(json_def)
-    def __init__(self, playSoundEnabled, mediaFiles, mutedDates):
+    def __init__(self, playSoundEnabled, mediaFiles, mutedDates, muteOnSaturday):
         self.playSoundEnabled: bool = playSoundEnabled
         self.mediaFiles: list = mediaFiles
         self.mutedDates = mutedDates
+        self.muteOnSaturday = muteOnSaturday
 
 
 """ number between 0 to 1 """
@@ -38,10 +39,11 @@ def getMusicPlayingProps(tenId: str) -> MusicPlayingProps:
         data: dict = r.json()
 
         playSound: bool = data.get('playSound', False)
+        muteOnSaturday: bool = data.get('muteOnSaturday', True)
         files: list = data.get(
             'files', ["piano1h.mp3", "french-jazz.mp3", "nature3h.mp3", "piano3h.mp3"])
         mutedDates: list = data.get('muteDates', ["2022-04-05", "2022-04-04"])
-        props = MusicPlayingProps(playSound, files, mutedDates)
+        props = MusicPlayingProps(playSound, files, mutedDates, muteOnSaturday)
         with open(f"./MusicPlayingProps", 'w') as f:
             dump(props.__dict__, f)
     except:
@@ -97,9 +99,12 @@ def controlPlayer(tenId: str):
             weekday = datetime.datetime.today().weekday()
             todayDate = datetime.datetime.today().strftime("%Y-%m-%d")
             currentHour = datetime.datetime.now().hour
-            shouldPlay = playingEnabled and ((weekday < calendar.FRIDAY or weekday == calendar.SUNDAY) or (
-                weekday == calendar.FRIDAY and currentHour < 15) or (weekday == calendar.SATURDAY and currentHour > 21)) and (
+            playMusicOnSaturdays = not playingProps.muteOnSaturday
+            todayNotSaturday = not isSaturday(weekday, currentHour)
+
+            shouldPlay = playingEnabled and (playMusicOnSaturdays or todayNotSaturday) and (
                 todayDate not in playingProps.mutedDates)
+
             desiredVolume = 1 if (
                 currentHour > 8 and currentHour < 20) else 0.8
 
@@ -110,7 +115,7 @@ def controlPlayer(tenId: str):
                 playingProps.mediaFiles)
 
             isPlaying = pygame.mixer.music.get_busy()
-            pygame.mixer.music.set_volume(desiredVolume)            
+            pygame.mixer.music.set_volume(desiredVolume)
             log(1, f"Isplaying {isPlaying}  desiredVolume {desiredVolume} shouldPlay {shouldPlay}")
 
             if not shouldPlay and isPlaying:
@@ -135,13 +140,19 @@ def controlPlayer(tenId: str):
             log(1, f"Sleeping for {sleeptimeSeconds}..")
 
 
+def isSaturday(weekday, currentHour):
+    return ((weekday < calendar.FRIDAY or weekday == calendar.SUNDAY) or (
+        weekday == calendar.FRIDAY and currentHour < 15) or (weekday == calendar.SATURDAY and currentHour > 21))
+
+
 def log(level: int, msg: str):
     LOGGING_CODE = os.environ.get('LOGGING_CODE')
     COMM_DEVICE_ID = os.environ.get('COMM_DEVICE_ID')
     now = datetime.datetime.now()
     current_time = now. strftime("%H:%M:%S")
     if debug:
-        print(f"{current_time} [{level}] \t{tenantId}.{COMM_DEVICE_ID} \t{msg}")
+        print(
+            f"{current_time} [{level}] \t{tenantId}.{COMM_DEVICE_ID} \t{msg}")
     if level > 1:
         URL = f"https://feeds-admin.azurewebsites.net/api/Logging?code={LOGGING_CODE}&errorCode={level}&msg={msg}"
         # sending get request and saving the response as response object
@@ -149,7 +160,6 @@ def log(level: int, msg: str):
             requests.get(url=URL)
         except Exception as e:
             print(f"{current_time}\t{tenantId}.{COMM_DEVICE_ID} \t{e}")
-
 
 
 tenantId: str = sys.argv[1]
