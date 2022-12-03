@@ -106,7 +106,7 @@ def controlPlayer(tenId: str):
                 todayDate not in playingProps.mutedDates)
 
             desiredVolume = 1 if (
-                currentHour > 8 and currentHour < 20) else 0.8
+                currentHour > 7 and currentHour < 21) else 0.8
 
             # test
             #desiredVolume = 0.1
