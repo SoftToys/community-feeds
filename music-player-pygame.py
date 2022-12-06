@@ -141,8 +141,8 @@ def controlPlayer(tenId: str):
 
 
 def isSaturday(weekday, currentHour):
-    return ((weekday < calendar.FRIDAY or weekday == calendar.SUNDAY) or (
-        weekday == calendar.FRIDAY and currentHour < 15) or (weekday == calendar.SATURDAY and currentHour > 21))
+    return (weekday == calendar.FRIDAY and currentHour > 15) or (
+      weekday == calendar.SATURDAY and currentHour < 21))
 
 
 def log(level: int, msg: str):
