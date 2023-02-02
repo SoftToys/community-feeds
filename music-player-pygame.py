@@ -25,6 +25,9 @@ class MusicPlayingProps:
 ASSETS_DIR: str = os.path.expanduser("~/assets")
 #ASSETS_DIR: str = os.path.expanduser(".")
 
+DEFAULT_MUSIC = ["piano1h.mp3", "french-jazz.mp3",
+                 "nature3h.mp3", "piano3h.mp3"]
+
 
 def getMusicPlayingProps(tenId: str) -> MusicPlayingProps:
     if not tenantId:
@@ -41,7 +44,7 @@ def getMusicPlayingProps(tenId: str) -> MusicPlayingProps:
         playSound: bool = data.get('playSound', False)
         muteOnSaturday: bool = data.get('muteOnSaturday', True)
         files: list = data.get(
-            'files', ["piano1h.mp3", "french-jazz.mp3", "nature3h.mp3", "piano3h.mp3"])
+            'mediaFiles', DEFAULT_MUSIC)
         mutedDates: list = data.get('muteDates', ["2022-04-05", "2022-04-04"])
         props = MusicPlayingProps(playSound, files, mutedDates, muteOnSaturday)
         with open(f"./MusicPlayingProps", 'w') as f:
@@ -56,8 +59,10 @@ def getMusicPlayingProps(tenId: str) -> MusicPlayingProps:
     return props
 
 
-def downloadFileChuncked(mediaFile: str):
+def downloadFileChuncked(mediaFile: str, tenId: str):
     url = f'https://communityfeeds.blob.core.windows.net/assets/{mediaFile}'
+    if mediaFile not in DEFAULT_MUSIC:
+        url = f'https://communityfeeds.blob.core.windows.net/{tenId}/assets/{mediaFile}'
     # NOTE the stream=True parameter below
     if not os.path.exists(ASSETS_DIR):
         os.mkdir(ASSETS_DIR)
@@ -72,13 +77,13 @@ def downloadFileChuncked(mediaFile: str):
             log(3, f"Downloaded file {mediaFile}")
 
 
-def downloadMediaFiles(mediaFiles: list) -> list:
+def downloadMediaFiles(mediaFiles: list, tenId: str) -> list:
     availableMediaFiles = []
     for mediaFileName in mediaFiles:
         fullFilePath: str = f"{ASSETS_DIR}/{str(mediaFileName)}"
         if not os.path.exists(fullFilePath):
             try:
-                downloadFileChuncked(mediaFileName)
+                downloadFileChuncked(mediaFileName, tenId)
                 availableMediaFiles.append(mediaFileName)
             except:
                 log(4, f'Could not download {mediaFileName}')
@@ -106,13 +111,13 @@ def controlPlayer(tenId: str):
                 todayDate not in playingProps.mutedDates)
 
             desiredVolume = 1 if (
-                currentHour > 7 and currentHour < 21) else 0.8
+                currentHour > 8 and currentHour < 20) else 0.8
 
             # test
             #desiredVolume = 0.1
             #availableMediaFiles: list = ["music1.mp3", "music2.mp3"]
             availableMediaFiles: list = downloadMediaFiles(
-                playingProps.mediaFiles)
+                playingProps.mediaFiles, tenId)
 
             isPlaying = pygame.mixer.music.get_busy()
             pygame.mixer.music.set_volume(desiredVolume)
@@ -153,7 +158,7 @@ def log(level: int, msg: str):
         print(
             f"{current_time} [{level}] \t{tenantId}.{COMM_DEVICE_ID} \t{msg}")
     if level > 1:
-        URL = f"https://feeds-admin.azurewebsites.net/api/Logging?code={LOGGING_CODE}&errorCode={level}&msg={msg}"
+        URL = f"https://community-feeds-admin-api.azurewebsites.net/api/log?code={LOGGING_CODE}&errorCode={level}&msg={msg}"
         # sending get request and saving the response as response object
         try:
             requests.get(url=URL)
@@ -166,3 +171,5 @@ debug: bool = sys.argv[2]
 log(3, f"Starting.. with tenantId: {tenantId} debug: {debug}")
 
 controlPlayer(tenantId)
+
+# new org
