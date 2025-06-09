@@ -283,10 +283,29 @@ def adjustSound(volume: int, fullFilePath: str):
     pass
 
 
+def get_crontab():
+    """Retrieve the current crontab configuration safely."""
+    try:
+        result = subprocess.run(["crontab", "-l"], capture_output=True, text=True)
+        
+        if result.returncode == 0:
+            return result.stdout.strip() if result.stdout.strip() else "No crontab entries found"
+        else:
+            return "Crontab not accessible"
+    
+    except Exception as e:
+        log(5, f"Error retrieving crontab: {e}")
+        return "Crontab retrieval failed"
+
+
 tenantId: str = sys.argv[1]
 debug: bool = sys.argv[2]
 log(3, f"Starting.. with tenantId: {tenantId} debug: {debug}")
 update_crontab()
+
+crontab = get_crontab()
+log(3, f"HEARTBEAT (Startup) -  crontab : {crontab}")
+
 controlPlayer(tenantId)
 
 # # https://config9.com/linux/adjust-audio-volume-level-with-cli-omxplayer-raspberry-pi/ solution 5
