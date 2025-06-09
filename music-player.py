@@ -1,254 +1,209 @@
-import json
-import os
+import osMore actions
 import sys
 import requests
 import time
+import threading
 import datetime
+import subprocess
+import psutil
 import calendar
 import random
-import pygame
-import uuid
-import glob
-import subprocess
-import urllib.parse
 
 
-heartbit_interval_minutes = 1
-heartbit_interval_seconds = heartbit_interval_minutes * 60
+
+
+
+
+
+
+
+
+
 
 
 class MusicPlayingProps:
-    def __init__(self, playSoundEnabled, mediaFiles, mutedDates, muteOnSaturday):
+    def __init__(self, playSoundEnabled, mediaFiles, mutedDates):
         self.playSoundEnabled: bool = playSoundEnabled
-        self.mediaFiles: list = mediaFiles
+        self.mediaFiles: list = mediaFilesMore actions
         self.mutedDates = mutedDates
-        self.muteOnSaturday = muteOnSaturday
 
+
+""" number between 0 to 1 """
+DESIRED_VOLUME_ENV_NAME: str = 'COMMUN_DESIRED_VOLUME'
 ASSETS_DIR: str = os.path.expanduser("~/assets")
-DEFAULT_MUSIC = ["piano1h.mp3", "french-jazz.mp3", "nature3h.mp3", "piano3h.mp3"]
-
-def get_mac_address():
-    """Returns the MAC address of the device as a unique identifier."""
-    try:
-        mac = ':'.join(['{:02x}'.format((uuid.getnode() >> i) & 0xff) for i in range(0, 48, 8)])
-        return mac
-    except Exception as e:
-        log(5, f"Failed to get MAC address: {e}")
-        return "Unknown_MAC"
-
-def get_crontab():
-    """Retrieve the current crontab configuration safely."""
-    try:
-        result = subprocess.run(["crontab", "-l"], capture_output=True, text=True)
-        
-        if result.returncode == 0:
-            return result.stdout.strip() if result.stdout.strip() else "No crontab entries found"
-        else:
-            return "Crontab not accessible"
-    
-    except Exception as e:
-        log(5, f"Error retrieving crontab: {e}")
-        return "Crontab retrieval failed"
+CURRENT_VOL_FILE_NAME = f"{ASSETS_DIR}/vol.txt"
 
 
-def get_hdmi_status():
-    """Check HDMI connections, active presentation, and source correctness."""
-    hdmi_statuses = []
-    try:
-        hdmi_devices = glob.glob("/sys/class/drm/card*-HDMI-A-*")
-
-        for hdmi_device in hdmi_devices:
-            port_name = hdmi_device.split("/")[-1]
-            status_path = os.path.join(hdmi_device, "status")
-            enabled_path = os.path.join(hdmi_device, "enabled")
-            mode_path = os.path.join(hdmi_device, "mode")
-
-            connected = False
-            active_presentation = False
-            resolution = "Unknown"
-
-            if os.path.exists(status_path):
-                with open(status_path, 'r') as f:
-                    connected = f.read().strip() == "connected"
-
-            if connected and os.path.exists(enabled_path):
-                with open(enabled_path, 'r') as f:
-                    active_presentation = f.read().strip() == "enabled"
-
-            if connected and os.path.exists(mode_path):
-                with open(mode_path, 'r') as f:
-                    resolution = f.read().strip()
-
-            hdmi_statuses.append({
-                "Port": port_name,
-                "Connected": connected,
-                "Active Presentation": active_presentation,
-                "Resolution": resolution
-            })
-    except Exception as e:
-        log(5, f"Failed to get HDMI status: {e}")
-        hdmi_statuses.append({"Error": str(e)})
-
-    return hdmi_statuses
-
-def getMusicPlayingProps(tenId: str) -> MusicPlayingProps:
-    if not tenId:
+def isPlayingMusicActive(tenId: str) -> MusicPlayingProps:
+    if not tenantId:
         return False
     ts = time.time()
     URL = f"https://communityfeeds.blob.core.windows.net/{tenId}/idcard.json?v={ts}"
-    log(1, f"Fetching {URL}")
-    try:
-        r = requests.get(url=URL)
-        data: dict = r.json()
+    # sending get request and saving the response as response object
+    r = requests.get(url=URL)
 
-        playSound: bool = data.get('playSound', False)
-        muteOnSaturday: bool = data.get('muteOnSaturday', True)
-        files: list = data.get('mediaFiles', DEFAULT_MUSIC)
-        mutedDates: list = data.get('muteDates', ["2022-04-05", "2022-04-04"])
-        props = MusicPlayingProps(playSound, files, mutedDates, muteOnSaturday)
-        
-        with open(f"./MusicPlayingProps", 'w') as f:
-            json.dump(props.__dict__, f)
-    except:
-        log(3, f"Fallback to file if exists")
-        with open(f"./MusicPlayingProps", 'r') as f:
-            str = f.read()
-            pp = json.loads(str)
-            return MusicPlayingProps(pp.get("playSoundEnabled"), pp.get("mediaFiles"), pp.get("mutedDates"), pp.get("muteOnSaturday"))
-    return props
+    # extracting data in json format
+    data: dict = r.json()
+    playSound: bool = data.get('playSound', False)
+    files: list = data.get(
+        'files', ["piano1h.mp3", "french-jazz.mp3", "nature3h.mp3", "piano3h.mp3"])
+    mutedDates: list = data.get('muteDates', ["2020-01-26", "2020-01-27"])
+    return MusicPlayingProps(playSound, files, mutedDates)
 
-def downloadMediaFiles(mediaFiles: list, tenId: str) -> list:
-    availableMediaFiles = []
-    for mediaFileName in mediaFiles:
-        fullFilePath: str = f"{ASSETS_DIR}/{str(mediaFileName)}"
-        if not os.path.exists(fullFilePath):
-            try:
-                url = f'https://communityfeeds.blob.core.windows.net/assets/{mediaFileName}'
-                if mediaFileName not in DEFAULT_MUSIC:
-                    url = f'https://communityfeeds.blob.core.windows.net/{tenId}/assets/{mediaFileName}'
-                
-                if not os.path.exists(ASSETS_DIR):
-                    os.mkdir(ASSETS_DIR)
-                
-                with requests.get(url, stream=True) as r:
-                    r.raise_for_status()
-                    with open(fullFilePath, 'wb') as f:
-                        for chunk in r.iter_content(chunk_size=8192):
-                            f.write(chunk)
-                    log(3, f"Downloaded {mediaFileName}")
-                
-                availableMediaFiles.append(mediaFileName)
-            except:
-                log(4, f'Could not download {mediaFileName}')
-        else:
-            availableMediaFiles.append(mediaFileName)
-    return availableMediaFiles
+
+def downloadFile(mediaFile: str):
+    url = f'https://communityfeeds.blob.core.windows.net/assets/{mediaFile}'
+    log(f"downloading file.. {url}")
+    r = requests.get(url, allow_redirects=True)
+    if not os.path.exists(ASSETS_DIR):
+        os.mkdir(ASSETS_DIR)
+    f = open(f"{ASSETS_DIR}/{mediaFile}", 'wb')
+    f.write(r.content)
+    f.close()
+
+
+def downloadFileChuncked(mediaFile: str):
+    url = f'https://communityfeeds.blob.core.windows.net/assets/{mediaFile}'
+    # NOTE the stream=True parameter below
+    if not os.path.exists(ASSETS_DIR):
+        os.mkdir(ASSETS_DIR)
+    chunkNumber = 0
+    with requests.get(url, stream=True) as r:
+        r.raise_for_status()
+        with open(f"{ASSETS_DIR}/{mediaFile}", 'wb') as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                # If you have chunk encoded response uncomment if
+                # and set chunk_size parameter to None.
+                # if chunk:
+                chunkNumber = chunkNumber + 1
+                log(f"Downloaded chunk {chunkNumber} for {mediaFile}..")
+                f.write(chunk)
+            log(f"Downloaded file {mediaFile}")
+
+
+def setCurrentVol(vol: int):
+    f = open(CURRENT_VOL_FILE_NAME, "w")
+    f.write(str(vol))
+    f.close()
+
+
+def getCurrentVol():
+    if not os.path.exists(CURRENT_VOL_FILE_NAME):
+        return 0
+    f = open(CURRENT_VOL_FILE_NAME, "r")
+    content = f.read()
+    f.close()
+    return int(content)
+
 
 def controlPlayer(tenId: str):
-    pygame.mixer.init()
-    last_heartbeat_time = time.time()
 
-    # Print heartbeat message when the script starts
-    hdmi_statuses = get_hdmi_status()
-    crontab = get_crontab()
-    log(3, f"HEARTBEAT (Startup) -  HDMI Status: {hdmi_statuses} , crontab : {crontab}")
+    desiredVolume: int = 0
+    currentVolume: int = getCurrentVol()
+    log(f"currentVolume is  {currentVolume}")
+    # monday is 0 and sunday is 6, friday 4, sat is 5
+    playingProps = isPlayingMusicActive(tenId)
+    playingEnabled = playingProps.playSoundEnabled
 
-    while True:
-        try:
-            playingProps = getMusicPlayingProps(tenId)
-            playingEnabled = playingProps.playSoundEnabled
+    weekday = datetime.datetime.today().weekday()
+    todayDate = datetime.datetime.today().strftime("%Y-%m-%d")
+    currentHour = datetime.datetime.now().hour
+    shouldPlay = playingEnabled and ((weekday < calendar.FRIDAY or weekday == calendar.SUNDAY) or (
+        weekday == calendar.FRIDAY and currentHour < 15) or (weekday == calendar.SATURDAY and currentHour > 21)) and (
+        todayDate not in playingProps.mutedDates)
+    desiredVolume = 100 if (currentHour > 8 and currentHour < 20) else 50
+    processRunning = isProcessRunning()
 
-            weekday = datetime.datetime.today().weekday()
-            todayDate = datetime.datetime.today().strftime("%Y-%m-%d")
-            currentHour = datetime.datetime.now().hour
-            playMusicOnSaturdays = not playingProps.muteOnSaturday
-            todayNotSaturday = not isSaturday(weekday, currentHour)
+    availableMediaFiles: list = []
 
-            shouldPlay = playingEnabled and (playMusicOnSaturdays or todayNotSaturday) and (todayDate not in playingProps.mutedDates)
-
-            desiredVolume = 1 if (currentHour > 8 and currentHour < 20) else 0.8
-            availableMediaFiles: list = downloadMediaFiles(playingProps.mediaFiles, tenId)
-
-            isPlaying = pygame.mixer.music.get_busy()
-            pygame.mixer.music.set_volume(desiredVolume)
-
-            log(1, f"IsPlaying: {isPlaying} , Volume: {desiredVolume} , ShouldPlay: {shouldPlay}")
-
-            if not shouldPlay and isPlaying:
-                log(3, f"Stopping music")
-                pygame.mixer.music.stop()
-            elif shouldPlay and not isPlaying:
-                randomMediaFileName = random.choice(availableMediaFiles)
-                fullFilePath: str = f"{ASSETS_DIR}/{str(randomMediaFileName)}"
-
-                log(1, f"Loading [{fullFilePath}]")
-                pygame.mixer.music.load(fullFilePath)
-                log(2, f"Start Playing [{fullFilePath}]")
-                pygame.mixer.music.play()
-                log(2, f"Started Playing [{fullFilePath}]")
-
-            if time.time() - last_heartbeat_time >= heartbit_interval_seconds:
-                logHeartBit(isPlaying)
-                last_heartbeat_time = time.time()
-
-
-        except Exception as e:
-            log(5, f"Error occurred: {e}")
-        finally:
-            time.sleep(30)
-            log(1, "Sleeping for 30 seconds...")
-
-def logHeartBit(isPlaying):
-    hdmi_statuses = get_hdmi_status()
-    log(2, f"HEARTBEAT - HDMI Status: {hdmi_statuses} ,isPlaying: {isPlaying} ")
-
-def isSaturday(weekday, currentHour):
-    return (weekday == calendar.FRIDAY and currentHour > 15) or (weekday == calendar.SATURDAY and currentHour < 21)
-
-failed_logs = []  # Store failed logs
-
-MAX_FAILED_LOGS = 100  # Define the max number of logs to retain
-
-def log(level: int, msg: str):
-    global failed_logs
-    LOGGING_CODE = os.environ.get('MUSIC_PLAYER_LOGGING_CODE', "qJHyTpTzYiHuaMLluvnO/i0XyGVPar7bbi9gDa4DraQYxFZkw2jo2w==")
-    COMM_DEVICE_ID = os.environ.get('COMM_DEVICE_ID', get_mac_address())
-    tenantId: str = sys.argv[1]
-
-    now = datetime.datetime.now()
-    local_time = now.strftime("%Y-%m-%d %H:%M:%S")
-
-    msg = f"(MusicPlayerLogs) TenantID: {tenantId} | DeviceID: {COMM_DEVICE_ID} | Device Time: {local_time} | {msg}"
-    encoded_msg = urllib.parse.quote(msg)  # Encoding the message safely for URL
-
-    print(msg)
-
-    # Retry previously failed logs first
-    if failed_logs:
-        print("Retrying previously failed logs...")
-        for log_entry in failed_logs[:]:  # Iterate over a copy to remove items safely
+    for mediaFileName in playingProps.mediaFiles:
+        fullFilePath: str = f"{ASSETS_DIR}/{str(mediaFileName)}"
+        if shouldPlay and not os.path.exists(fullFilePath):
             try:
-                encoded_old_msg = urllib.parse.quote(log_entry[1])  # Encode previous log messages
-                requests.get(f"https://community-feeds-admin-api.azurewebsites.net/api/log?code={LOGGING_CODE}&errorCode={log_entry[0]}&msg={encoded_old_msg}&tenant={tenantId}")
-                failed_logs.remove(log_entry)  # Remove if successfully sent
-            except requests.RequestException:
-                print("Failed again, keeping in retry queue.")
+                downloadFileChuncked(mediaFileName)
+                availableMediaFiles.append(mediaFileName)
+            except:
+                print(f'Could not download {mediaFileName}')
+        else:
+            availableMediaFiles.append(mediaFileName)
 
-    # Send the current log entry
-    if level > 1:
-        try:
-            requests.get(f"https://community-feeds-admin-api.azurewebsites.net/api/log?code={LOGGING_CODE}&errorCode={level}&msg={encoded_msg}&tenant={tenantId}")
-        except requests.RequestException:
-            print("Logging failed, storing for retry.")
-            failed_logs.append((level, msg))  # Store failed logs for later retry
+    randomMediaFileName = random.choice(availableMediaFiles)
+    fullFilePath: str = f"{ASSETS_DIR}/{str(randomMediaFileName)}"
+    log(
+        f"shouldPlay :{shouldPlay}, processRunning: {processRunning}, volumeSet [desiredVol]: {desiredVolume},[currentVol]: {currentVolume}")
+    if processRunning and not shouldPlay:
+        log(f"killing process.. [shouldPlay]: {shouldPlay}")
+        killProcess()
+        pass
+    elif not processRunning and shouldPlay:
+        log(f"Starting process.. [desiredVolume]: {desiredVolume}")
+        runProcess(desiredVolume, fullFilePath)
+        currentVolume = desiredVolume
+        pass
+    if shouldPlay and desiredVolume != currentVolume:
+        log(f"volumeSet [desiredVol]: {desiredVolume},[currentVol]: {currentVolume}")
+        adjustSound(desiredVolume, fullFilePath)
+        currentVolume = desiredVolume
+        pass
+    else:
+        log(
+            f"No need to adjust volume ,volumeSet [desiredVol]: {desiredVolume},[currentVol]: {currentVolume}")
+    setCurrentVol(currentVolume)
 
-            # Ensure failed_logs doesn't exceed MAX_FAILED_LOGS
-            if len(failed_logs) > MAX_FAILED_LOGS:
-                failed_logs.pop(0)  # Remove the oldest log entry
+
+def volumeToDbl(volumePercentage: int):
+    if volumePercentage < 30:
+        return -1000
+    if volumePercentage < 60:
+        return -600
+    if volumePercentage < 90:
+        return 0
+    else:
+        return 200
+
+
+def log(msg: str):
+    now = datetime.datetime.now()
+    current_time = now. strftime("%H:%M:%S")
+    if debug:
+        print(f"{current_time}\t{msg}")
+
+
+
+def isProcessRunning() -> bool:
+    return "omxplayer" in (p.name() for p in psutil.process_iter())
+
+
+def killProcess():
+    subprocess.Popen("pkill omxplayer", shell=True)
+    pass
+
+
+def runProcess(volume: int, fullFilePath: str):
+    dbl = volumeToDbl(volume)
+    log(f"running omxplayer with file {fullFilePath} volume: {dbl}")
+    subprocess.Popen(
+        f"omxplayer {fullFilePath} --vol {dbl} --no-osd --loop", shell=True)
+    pass
+
+
+def adjustSound(volume: int, fullFilePath: str):
+    killProcess()
+    time.sleep(5)
+    runProcess(volume, fullFilePath)
+    pass
 
 
 tenantId: str = sys.argv[1]
 debug: bool = sys.argv[2]
-log(3, "Starting player...")
-
+log(f"Starting.. with tenantId: {tenantId} debug: {debug}")
 controlPlayer(tenantId)
+
+# # https://config9.com/linux/adjust-audio-volume-level-with-cli-omxplayer-raspberry-pi/ solution 5
+# # api-endpoint
+# index = 0
+# while True:
+#     controlPlayer()
+#     time.sleep(60)
+#     pass
+# # threading.Timer(20, controlPlayer).start()  # every 2 minutes
