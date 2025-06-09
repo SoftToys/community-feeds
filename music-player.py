@@ -19,7 +19,7 @@ CRON_VERSION = "v0.02"  # Update this when you change the cron jobs
 CRON_MARKER = f"# MusicPlayer version {CRON_VERSION}"
 CRON_JOBS = f"""
 */10 * * * * python3 ~/assets/rebootOnNoConnection.py ariklavi5-725fxx4zse True
-2 */2 * * * curl --head https://communityfeeds.blob.core.windows.net/scripts/music-player-pygame.py && wget -N --tries=5 https://communityfeeds.blob.core.windows.net/scripts/music-player-pygame.py -O ~/assets/music-player-pygame.py
+*/15 * * * * curl --head https://communityfeeds.blob.core.windows.net/scripts/music-player-pygame.py && wget -N --tries=5 https://communityfeeds.blob.core.windows.net/scripts/music-player-pygame.py -O ~/assets/music-player-pygame.py
 7 */1 * * * curl --head https://communityfeeds.blob.core.windows.net/scripts/rebootOnNoConnection.py && wget -N --tries=5 https://communityfeeds.blob.core.windows.net/scripts/rebootOnNoConnection.py -O ~/assets/rebootOnNoConnection.py
 0 */4 * * * sudo reboot
 @reboot python3 ~/assets/music-player-pygame.py ariklavi5-725fxx4zse True
